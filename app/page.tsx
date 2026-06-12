@@ -1,221 +1,220 @@
 // app/page.tsx
 import Link from 'next/link';
-import { Star, PhoneCall, ChevronRight, CheckCircle2, Users, Award, Zap, Flame } from 'lucide-react';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen" style={{backgroundColor: '#0a0a0f', color: 'white'}}>
+    <>
+      <style>{`
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0a0a0f; color: white; font-family: Inter, system-ui, sans-serif; }
+        .urgency { background: linear-gradient(to right, #d97706, #ea580c); color: white; text-align: center; padding: 10px; font-size: 14px; font-weight: 600; }
+        .nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .logo { display: flex; align-items: center; gap: 12px; }
+        .logo-icon { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(to bottom right, #fbbf24, #ea580c); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; }
+        .logo-name { font-weight: 700; font-size: 14px; }
+        .logo-sub { color: #fbbf24; font-size: 12px; }
+        .btn-book { background: #f59e0b; color: black; font-weight: 700; padding: 8px 20px; border-radius: 999px; font-size: 14px; text-decoration: none; }
+        .btn-book:hover { background: #fbbf24; }
+        .hero { padding: 64px 24px 80px; text-align: center; }
+        .hero-pill { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 999px; padding: 8px 16px; font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 32px; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; line-height: 1.2; margin-bottom: 24px; font-family: Georgia, serif; }
+        .hero-gradient { background: linear-gradient(to right, #fbbf24, #fb923c, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 18px; color: rgba(255,255,255,0.6); max-width: 560px; margin: 0 auto 40px; line-height: 1.6; }
+        .price-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 16px; }
+        .price-old { text-decoration: line-through; color: rgba(255,255,255,0.3); font-size: 20px; }
+        .price-new { background: #f59e0b; color: black; font-size: 32px; font-weight: 900; padding: 4px 16px; border-radius: 8px; }
+        .price-badge { background: rgba(34,197,94,0.2); border: 1px solid rgba(34,197,94,0.4); color: #4ade80; font-size: 14px; padding: 4px 12px; border-radius: 999px; font-weight: 600; }
+        .btn-cta { display: inline-flex; align-items: center; gap: 12px; background: linear-gradient(to right, #f59e0b, #ea580c); color: black; font-weight: 900; font-size: 20px; padding: 20px 40px; border-radius: 16px; text-decoration: none; margin-bottom: 16px; box-shadow: 0 10px 30px rgba(245,158,11,0.3); }
+        .secure { color: rgba(255,255,255,0.4); font-size: 14px; }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; padding: 40px 24px; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.02); max-width: 900px; margin: 0 auto; }
+        .stat { text-align: center; }
+        .stat-num { font-size: 24px; font-weight: 900; color: white; }
+        .stat-label { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+        .astro { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; max-width: 900px; margin: 0 auto; padding: 80px 24px; }
+        .astro img { width: 280px; height: 320px; border-radius: 24px; object-fit: cover; object-position: top; border: 2px solid rgba(245,158,11,0.3); }
+        .astro-tag { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #fbbf24; }
+        .astro h2 { font-size: 30px; font-weight: 900; color: white; margin: 8px 0 4px; font-family: Georgia, serif; }
+        .astro-sub { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 20px; }
+        .check-item { display: flex; align-items: center; gap: 12px; font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 12px; }
+        .check-icon { color: #fbbf24; font-size: 16px; }
+        .btn-outline { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; font-weight: 600; padding: 12px 24px; border-radius: 12px; font-size: 14px; text-decoration: none; margin-top: 24px; }
+        .features { padding: 80px 24px; background: linear-gradient(to bottom, rgba(245,158,11,0.05), transparent); }
+        .features-title { text-align: center; margin-bottom: 48px; }
+        .features-tag { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #fbbf24; }
+        .features h2 { font-size: 30px; font-weight: 900; color: white; margin-top: 8px; font-family: Georgia, serif; }
+        .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; max-width: 750px; margin: 0 auto; }
+        .feature-card { display: flex; gap: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; }
+        .feature-icon { font-size: 30px; flex-shrink: 0; }
+        .feature-title { font-weight: 700; color: white; font-size: 14px; margin-bottom: 4px; }
+        .feature-desc { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+        .testimonials { max-width: 900px; margin: 0 auto; padding: 80px 24px; }
+        .testimonials-title { text-align: center; margin-bottom: 48px; }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .testimonial { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; }
+        .testimonial-stars { font-size: 16px; margin-bottom: 12px; }
+        .testimonial-text { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6; margin-bottom: 16px; }
+        .testimonial-name { font-weight: 600; color: white; font-size: 14px; }
+        .testimonial-city { font-size: 12px; color: rgba(255,255,255,0.3); }
+        .faq { max-width: 600px; margin: 0 auto; padding: 40px 24px 160px; }
+        .faq h2 { font-size: 24px; font-weight: 900; color: white; text-align: center; margin-bottom: 40px; font-family: Georgia, serif; }
+        .faq-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; margin-bottom: 12px; }
+        .faq-q { font-weight: 600; color: white; font-size: 14px; margin-bottom: 8px; }
+        .faq-a { font-size: 14px; color: rgba(255,255,255,0.5); }
+        .sticky-cta { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; padding: 16px; background: linear-gradient(to top, #000, rgba(0,0,0,0.95), transparent); }
+        .sticky-inner { max-width: 400px; margin: 0 auto; }
+        .sticky-btn { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(to right, #f59e0b, #ea580c); color: black; font-weight: 900; padding: 16px 24px; border-radius: 16px; text-decoration: none; box-shadow: 0 10px 40px rgba(245,158,11,0.4); }
+        .sticky-left-title { font-size: 16px; }
+        .sticky-left-sub { font-size: 12px; font-weight: 400; opacity: 0.7; }
+        .sticky-price { font-size: 24px; font-weight: 900; }
+        .footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 32px 24px; text-align: center; }
+        .footer-logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; }
+        .footer-icon { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(to bottom right, #fbbf24, #ea580c); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+        .footer-name { font-weight: 700; color: white; }
+        .footer-addr { font-size: 12px; color: rgba(255,255,255,0.3); }
+        @media (max-width: 640px) {
+          .stats { grid-template-columns: repeat(2, 1fr); }
+          .astro { grid-template-columns: 1fr; }
+          .astro img { width: 200px; height: 240px; margin: 0 auto; display: block; }
+          .features-grid { grid-template-columns: 1fr; }
+          .testimonials-grid { grid-template-columns: 1fr; }
+        }
+      `}</style>
 
-      {/* URGENCY BAR */}
-      <div style={{background: 'linear-gradient(to right, #d97706, #ea580c, #d97706)'}} className="text-white text-center py-2.5 text-sm font-semibold">
-        <Flame className="w-4 h-4 inline mr-1.5" />
-        सीमित स्लॉट बचे हैं — आज ही बुक करें और अपना भविष्य जानें!
-        <Flame className="w-4 h-4 inline ml-1.5" />
-      </div>
+      <div className="urgency">🔥 सीमित स्लॉट बचे हैं — आज ही बुक करें और अपना भविष्य जानें! 🔥</div>
 
-      {/* NAV */}
-      <nav className="px-6 py-4 flex justify-between items-center" style={{borderBottom: '1px solid rgba(255,255,255,0.05)'}}>
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full flex items-center justify-center text-lg font-bold" style={{background: 'linear-gradient(to bottom right, #fbbf24, #ea580c)'}}>ॐ</div>
+      <nav className="nav">
+        <div className="logo">
+          <div className="logo-icon">ॐ</div>
           <div>
-            <div className="font-bold text-white text-sm">OMKKAAR</div>
-            <div className="text-xs" style={{color: '#fbbf24'}}>Astroworld</div>
+            <div className="logo-name">OMKKAAR</div>
+            <div className="logo-sub">Astroworld</div>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <a href="tel:+917069110573" className="hidden sm:flex items-center gap-1.5 text-sm transition-colors" style={{color: 'rgba(255,255,255,0.6)'}}>
-            <PhoneCall className="w-3.5 h-3.5" />
-            +91 70691 10573
+        <div style={{display:'flex', alignItems:'center', gap:'12px'}}>
+          <a href="tel:+917069110573" style={{color:'rgba(255,255,255,0.6)', fontSize:'14px', textDecoration:'none', display:'flex', alignItems:'center', gap:'6px'}}>
+            📞 +91 70691 10573
           </a>
-          <Link href="/book" className="font-bold px-5 py-2 rounded-full text-sm text-black" style={{backgroundColor: '#f59e0b'}}>
-            अभी बुक करें
-          </Link>
+          <Link href="/book" className="btn-book">अभी बुक करें</Link>
         </div>
       </nav>
 
-      {/* HERO */}
-      <section className="px-6 pt-16 pb-20 text-center relative overflow-hidden">
-        <div className="max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm mb-8" style={{background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)'}}>
-            <span style={{color: 'rgba(255,255,255,0.7)'}}>12,000+ लोगों ने अपना भविष्य जाना ⭐⭐⭐⭐⭐</span>
-          </div>
+      <section className="hero">
+        <div className="hero-pill">12,000+ लोगों ने अपना भविष्य जाना ⭐⭐⭐⭐⭐</div>
+        <h1>
+          क्या आपकी कुंडली में<br />
+          <span className="hero-gradient">छुपा है आपका भाग्य?</span>
+        </h1>
+        <p>25+ वर्षों के अनुभव के साथ <strong style={{color:'white'}}>Pt. Mukesh Ravindra Gupta</strong> आपकी कुंडली देखकर बताएंगे — प्रेम, करियर, विवाह और भविष्य का सच।</p>
+        <div className="price-row">
+          <span className="price-old">₹999</span>
+          <span className="price-new">₹199</span>
+          <span className="price-badge">80% OFF</span>
+        </div>
+        <div><Link href="/book" className="btn-cta">अपनी कुंडली अभी बुक करें →</Link></div>
+        <div className="secure">✅ 100% Secure Payment · Razorpay Protected</div>
+      </section>
 
-          <h1 className="text-4xl font-black mb-6 leading-tight" style={{fontSize: 'clamp(2rem, 5vw, 3.5rem)'}}>
-            क्या आपकी कुंडली में
-            <br />
-            <span style={{background: 'linear-gradient(to right, #fbbf24, #fb923c, #fbbf24)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'}}>
-              छुपा है आपका भाग्य?
-            </span>
-          </h1>
+      <div style={{maxWidth:'900px', margin:'0 auto'}}>
+        <div className="stats">
+          {[['12,000+','संतुष्ट ग्राहक'],['25+ वर्ष','अनुभव'],['4.9/5','औसत रेटिंग'],['24 घंटे','में रिपोर्ट']].map(([num,label])=>(
+            <div key={num} className="stat"><div className="stat-num">{num}</div><div className="stat-label">{label}</div></div>
+          ))}
+        </div>
+      </div>
 
-          <p className="text-lg mb-4 max-w-xl mx-auto leading-relaxed" style={{color: 'rgba(255,255,255,0.6)'}}>
-            25+ वर्षों के अनुभव के साथ <span className="text-white font-semibold">Pt. Mukesh Ravindra Gupta</span> आपकी कुंडली देखकर बताएंगे — प्रेम, करियर, विवाह और भविष्य का सच।
-          </p>
-
-          <div className="flex flex-col items-center gap-4 mt-10">
-            <div className="flex items-center gap-3">
-              <span className="line-through text-xl" style={{color: 'rgba(255,255,255,0.3)'}}>₹999</span>
-              <span className="font-black text-3xl px-4 py-1 rounded-lg text-black" style={{backgroundColor: '#f59e0b'}}>₹199</span>
-              <span className="text-sm px-3 py-1 rounded-full font-semibold" style={{background: 'rgba(34,197,94,0.2)', border: '1px solid rgba(34,197,94,0.4)', color: '#4ade80'}}>80% OFF</span>
-            </div>
-            <Link href="/book" className="font-black text-xl px-10 py-5 rounded-2xl text-black flex items-center gap-3" style={{background: 'linear-gradient(to right, #f59e0b, #ea580c)', boxShadow: '0 10px 30px rgba(245,158,11,0.3)'}}>
-              अपनी कुंडली अभी बुक करें
-              <ChevronRight className="w-6 h-6" />
-            </Link>
-            <p className="text-sm flex items-center gap-2" style={{color: 'rgba(255,255,255,0.4)'}}>
-              <CheckCircle2 className="w-4 h-4" style={{color: '#4ade80'}} />
-              100% Secure Payment · Razorpay Protected
-            </p>
-          </div>
+      <section className="astro">
+        <div style={{display:'flex', justifyContent:'center'}}>
+          <img src="/mukesh.jpeg" alt="Pt. Mukesh Ravindra Gupta" style={{width:'280px',height:'320px',borderRadius:'24px',objectFit:'cover',objectPosition:'top',border:'2px solid rgba(245,158,11,0.3)'}} />
+        </div>
+        <div>
+          <div className="astro-tag">आपके ज्योतिषाचार्य</div>
+          <h2>Pt. Mukesh Ravindra Gupta</h2>
+          <div className="astro-sub">Certified Vedic Astrologer · Vadodara, Gujarat</div>
+          {['ISO 9001-2015 Certified Professional','Trademark Certified Astrologer','25+ वर्षों का वैदिक ज्योतिष अनुभव','करियर, विवाह, व्यापार में विशेषज्ञता','12,000+ सफल कुंडली परामर्श'].map(item=>(
+            <div key={item} className="check-item"><span className="check-icon">✓</span>{item}</div>
+          ))}
+          <Link href="/book" className="btn-outline">Pt. Gupta से अभी बात करें →</Link>
         </div>
       </section>
 
-      {/* TRUST STATS */}
-      <section style={{borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.02)'}}>
-        <div className="max-w-4xl mx-auto px-6 py-10 grid grid-cols-2 gap-6" style={{gridTemplateColumns: 'repeat(4, 1fr)'}}>
+      <section className="features">
+        <div className="features-title">
+          <div className="features-tag">सिर्फ ₹199 में मिलेगा</div>
+          <h2>आपको क्या मिलेगा?</h2>
+        </div>
+        <div className="features-grid">
           {[
-            { icon: <Users className="w-5 h-5" />, num: '12,000+', label: 'संतुष्ट ग्राहक' },
-            { icon: <Award className="w-5 h-5" />, num: '25+ वर्ष', label: 'अनुभव' },
-            { icon: <Star className="w-5 h-5" style={{fill: '#fbbf24', color: '#fbbf24'}} />, num: '4.9/5', label: 'औसत रेटिंग' },
-            { icon: <Zap className="w-5 h-5" />, num: '24 घंटे', label: 'में रिपोर्ट' },
-          ].map((s) => (
-            <div key={s.num} className="text-center">
-              <div className="flex justify-center mb-2" style={{color: '#fbbf24'}}>{s.icon}</div>
-              <div className="text-2xl font-black text-white">{s.num}</div>
-              <div className="text-xs mt-0.5" style={{color: 'rgba(255,255,255,0.4)'}}>{s.label}</div>
+            ['📋','विस्तृत कुंडली रिपोर्ट','20+ पेज की PDF रिपोर्ट — सभी 12 भावों का विश्लेषण'],
+            ['🎯','व्यक्तिगत परामर्श','Pt. Gupta के साथ 1-on-1 सत्र — आपके सवालों के जवाब'],
+            ['⚡','24 घंटे में डिलीवरी','बुकिंग के 24 घंटे के भीतर रिपोर्ट और परामर्श'],
+            ['🔮','उपाय और समाधान','ग्रह दोष, करियर, विवाह के लिए व्यावहारिक उपाय'],
+            ['💑','प्रेम और विवाह','सही साथी, विवाह का शुभ समय और संबंध विश्लेषण'],
+            ['💰','धन और करियर','व्यापार, नौकरी और आर्थिक स्थिति का भविष्य'],
+          ].map(([icon,title,desc])=>(
+            <div key={title} className="feature-card">
+              <div className="feature-icon">{icon}</div>
+              <div><div className="feature-title">{title}</div><div className="feature-desc">{desc}</div></div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ASTROLOGER */}
-      <section className="max-w-4xl mx-auto px-6 py-20">
-        <div className="grid gap-12 items-center" style={{gridTemplateColumns: '1fr 1fr'}}>
-          <div className="flex justify-center">
-            <img
-              src="/mukesh.jpeg"
-              alt="Pt. Mukesh Ravindra Gupta"
-              className="rounded-3xl object-cover object-top"
-              style={{width: '280px', height: '320px', border: '2px solid rgba(245,158,11,0.3)', boxShadow: '0 20px 60px rgba(245,158,11,0.1)'}}
-            />
+      <section className="testimonials">
+        <div className="testimonials-title">
+          <div className="features-tag">ग्राहकों की राय</div>
+          <h2 style={{fontSize:'30px',fontWeight:900,color:'white',marginTop:'8px',fontFamily:'Georgia,serif'}}>12,000+ लोगों ने बदली अपनी ज़िंदगी</h2>
+        </div>
+        <div className="testimonials-grid">
+          {[
+            ['Priya Sharma','Ahmedabad','Pt. Gupta जी ने मेरी कुंडली देखकर सटीक भविष्यवाणी की। विवाह का जो समय बताया वो बिल्कुल सही निकला।'],
+            ['Rahul Patel','Surat','करियर में बहुत परेशानी थी। Pt. Gupta के उपाय करने के बाद नई नौकरी मिली। 100% genuine astrologer हैं।'],
+            ['Meera Joshi','Vadodara','बेटे की शादी नहीं हो रही थी। कुंडली मिलान और उपाय के बाद 3 महीने में शादी हो गई।'],
+          ].map(([name,city,text])=>(
+            <div key={name} className="testimonial">
+              <div className="testimonial-stars">⭐⭐⭐⭐⭐</div>
+              <div className="testimonial-text">"{text}"</div>
+              <div className="testimonial-name">{name}</div>
+              <div className="testimonial-city">{city}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="faq">
+        <h2>अक्सर पूछे जाने वाले सवाल</h2>
+        {[
+          ['क्या ₹199 में सब कुछ मिलेगा?','हां — ₹199 में विस्तृत कुंडली रिपोर्ट और व्यक्तिगत परामर्श दोनों शामिल हैं।'],
+          ['कितने समय में रिपोर्ट मिलेगी?','बुकिंग के 24 घंटे के भीतर आपकी रिपोर्ट और परामर्श की व्यवस्था होगी।'],
+          ['Online consultation कैसे होगी?','बुकिंग के बाद आपको WhatsApp/Phone पर Pt. Gupta से जोड़ा जाएगा।'],
+          ['Payment secure है?','हां — Razorpay के माध्यम से 100% secure payment। UPI, Card, NetBanking सब accepted।'],
+        ].map(([q,a])=>(
+          <div key={q} className="faq-item">
+            <div className="faq-q">{q}</div>
+            <div className="faq-a">{a}</div>
           </div>
-          <div>
-            <span className="text-xs font-bold uppercase tracking-widest" style={{color: '#fbbf24'}}>आपके ज्योतिषाचार्य</span>
-            <h2 className="text-3xl font-black mt-2 mb-1 text-white">Pt. Mukesh Ravindra Gupta</h2>
-            <p className="text-sm mb-5" style={{color: 'rgba(255,255,255,0.4)'}}>Certified Vedic Astrologer · Vadodara, Gujarat</p>
-            <div className="space-y-3">
-              {[
-                'ISO 9001-2015 Certified Professional',
-                'Trademark Certified Astrologer',
-                '25+ वर्षों का वैदिक ज्योतिष अनुभव',
-                'करियर, विवाह, व्यापार में विशेषज्ञता',
-                '12,000+ सफल कुंडली परामर्श',
-              ].map((item) => (
-                <div key={item} className="flex items-center gap-3 text-sm" style={{color: 'rgba(255,255,255,0.7)'}}>
-                  <CheckCircle2 className="w-4 h-4 flex-shrink-0" style={{color: '#fbbf24'}} />
-                  {item}
-                </div>
-              ))}
-            </div>
-            <Link href="/book" className="inline-flex items-center gap-2 mt-8 font-semibold px-6 py-3 rounded-xl text-sm text-white" style={{background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)'}}>
-              Pt. Gupta से अभी बात करें <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
+        ))}
       </section>
 
-      {/* WHAT YOU GET */}
-      <section className="px-6 py-20" style={{background: 'linear-gradient(to bottom, rgba(245,158,11,0.05), transparent)'}}>
-        <div className="max-w-3xl mx-auto text-center mb-12">
-          <span className="text-xs font-bold uppercase tracking-widest" style={{color: '#fbbf24'}}>सिर्फ ₹199 में मिलेगा</span>
-          <h2 className="text-3xl font-black mt-2 text-white">आपको क्या मिलेगा?</h2>
-        </div>
-        <div className="max-w-3xl mx-auto grid gap-4" style={{gridTemplateColumns: 'repeat(2, 1fr)'}}>
-          {[
-            { icon: '📋', title: 'विस्तृत कुंडली रिपोर्ट', desc: '20+ पेज की PDF रिपोर्ट — सभी 12 भावों का विश्लेषण' },
-            { icon: '🎯', title: 'व्यक्तिगत परामर्श', desc: 'Pt. Gupta के साथ 1-on-1 सत्र — आपके सवालों के जवाब' },
-            { icon: '⚡', title: '24 घंटे में डिलीवरी', desc: 'बुकिंग के 24 घंटे के भीतर रिपोर्ट और परामर्श' },
-            { icon: '🔮', title: 'उपाय और समाधान', desc: 'ग्रह दोष, करियर, विवाह के लिए व्यावहारिक उपाय' },
-            { icon: '💑', title: 'प्रेम और विवाह', desc: 'सही साथी, विवाह का शुभ समय और संबंध विश्लेषण' },
-            { icon: '💰', title: 'धन और करियर', desc: 'व्यापार, नौकरी और आर्थिक स्थिति का भविष्य' },
-          ].map((item) => (
-            <div key={item.title} className="p-5 flex gap-4 rounded-2xl" style={{background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)'}}>
-              <div className="text-3xl flex-shrink-0">{item.icon}</div>
-              <div>
-                <div className="font-bold text-white text-sm mb-1">{item.title}</div>
-                <div className="text-xs leading-relaxed" style={{color: 'rgba(255,255,255,0.5)'}}>{item.desc}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* TESTIMONIALS */}
-      <section className="max-w-4xl mx-auto px-6 py-20">
-        <div className="text-center mb-12">
-          <span className="text-xs font-bold uppercase tracking-widest" style={{color: '#fbbf24'}}>ग्राहकों की राय</span>
-          <h2 className="text-3xl font-black mt-2 text-white">12,000+ लोगों ने बदली अपनी ज़िंदगी</h2>
-        </div>
-        <div className="grid gap-5" style={{gridTemplateColumns: 'repeat(3, 1fr)'}}>
-          {[
-            { name: 'Priya Sharma', city: 'Ahmedabad', text: 'Pt. Gupta जी ने मेरी कुंडली देखकर सटीक भविष्यवाणी की। विवाह का जो समय बताया वो बिल्कुल सही निकला।' },
-            { name: 'Rahul Patel', city: 'Surat', text: 'करियर में बहुत परेशानी थी। Pt. Gupta के उपाय करने के बाद नई नौकरी मिली। 100% genuine astrologer हैं।' },
-            { name: 'Meera Joshi', city: 'Vadodara', text: 'बेटे की शादी नहीं हो रही थी। कुंडली मिलान और उपाय के बाद 3 महीने में शादी हो गई।' },
-          ].map((t) => (
-            <div key={t.name} className="p-6 rounded-2xl" style={{background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)'}}>
-              <div className="flex mb-3">{'⭐'.repeat(5)}</div>
-              <p className="text-sm leading-relaxed mb-4" style={{color: 'rgba(255,255,255,0.6)'}}>"{t.text}"</p>
-              <div>
-                <div className="text-white font-semibold text-sm">{t.name}</div>
-                <div className="text-xs" style={{color: 'rgba(255,255,255,0.3)'}}>{t.city}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="max-w-2xl mx-auto px-6 py-10 pb-32">
-        <div className="text-center mb-10">
-          <h2 className="text-2xl font-black text-white">अक्सर पूछे जाने वाले सवाल</h2>
-        </div>
-        <div className="space-y-3">
-          {[
-            { q: 'क्या ₹199 में सब कुछ मिलेगा?', a: 'हां — ₹199 में विस्तृत कुंडली रिपोर्ट और व्यक्तिगत परामर्श दोनों शामिल हैं।' },
-            { q: 'कितने समय में रिपोर्ट मिलेगी?', a: 'बुकिंग के 24 घंटे के भीतर आपकी रिपोर्ट और परामर्श की व्यवस्था होगी।' },
-            { q: 'Online consultation कैसे होगी?', a: 'बुकिंग के बाद आपको WhatsApp/Phone पर Pt. Gupta से जोड़ा जाएगा।' },
-            { q: 'Payment secure है?', a: 'हां — Razorpay के माध्यम से 100% secure payment। UPI, Card, NetBanking सब accepted।' },
-          ].map((faq) => (
-            <div key={faq.q} className="p-5 rounded-xl" style={{background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)'}}>
-              <div className="font-semibold text-sm mb-2 text-white">{faq.q}</div>
-              <div className="text-sm" style={{color: 'rgba(255,255,255,0.5)'}}>{faq.a}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* STICKY CTA */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 p-4" style={{background: 'linear-gradient(to top, #000, rgba(0,0,0,0.95), transparent)'}}>
-        <div className="max-w-sm mx-auto">
-          <Link href="/book" className="flex items-center justify-between px-6 py-4 rounded-2xl text-black font-black" style={{background: 'linear-gradient(to right, #f59e0b, #ea580c)', boxShadow: '0 10px 40px rgba(245,158,11,0.4)'}}>
+      <div className="sticky-cta">
+        <div className="sticky-inner">
+          <Link href="/book" className="sticky-btn">
             <div>
-              <div className="text-base">कुंडली बुक करें</div>
-              <div className="text-xs font-normal opacity-70">सिर्फ ₹199 · Limited Slots</div>
+              <div className="sticky-left-title">कुंडली बुक करें</div>
+              <div className="sticky-left-sub">सिर्फ ₹199 · Limited Slots</div>
             </div>
-            <div className="text-2xl font-black">₹199 →</div>
+            <div className="sticky-price">₹199 →</div>
           </Link>
         </div>
       </div>
 
-      {/* FOOTER */}
-      <footer className="px-6 py-8 text-center" style={{borderTop: '1px solid rgba(255,255,255,0.05)'}}>
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <div className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm text-white" style={{background: 'linear-gradient(to bottom right, #fbbf24, #ea580c)'}}>ॐ</div>
-          <span className="font-bold text-white">OMKKAAR Astroworld</span>
+      <footer className="footer">
+        <div className="footer-logo">
+          <div className="footer-icon">ॐ</div>
+          <span className="footer-name">OMKKAAR Astroworld</span>
         </div>
-        <p className="text-xs" style={{color: 'rgba(255,255,255,0.3)'}}>22/FF, Emperor Building, Fatehgunj, Vadodara - 390002</p>
-        <p className="text-xs mt-1" style={{color: 'rgba(255,255,255,0.3)'}}>© 2026 Omkkaar Astroworld · All rights reserved</p>
+        <div className="footer-addr">22/FF, Emperor Building, Fatehgunj, Vadodara - 390002</div>
+        <div className="footer-addr" style={{marginTop:'4px'}}>© 2026 Omkkaar Astroworld · All rights reserved</div>
       </footer>
-    </div>
+    </>
   );
 }
