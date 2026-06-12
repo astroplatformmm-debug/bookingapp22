@@ -1,16 +1,16 @@
 'use client';
-// src/app/admin/dashboard/page.tsx
+// app/admin/dashboard/page.tsx
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import {
   Calendar, Users, IndianRupee, TrendingUp, LogOut, Search,
-  CheckCircle2, XCircle, Clock, RefreshCw, Sparkles, Plus, Trash2,
+  CheckCircle2, XCircle, Clock, RefreshCw, Sparkles, Plus,
   ChevronLeft, ChevronRight
 } from 'lucide-react';
-import { BookingType } from '../../../types';
-import { formatPrice, formatDate, formatTime, cn } from '../../../lib/utils';
+import { BookingType } from '../../types';
+import { formatPrice, formatDate, formatTime, cn } from '../../lib/utils';
 
 interface Stats {
   totalBookings: number;
@@ -35,7 +35,6 @@ export default function AdminDashboard() {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'bookings' | 'slots'>('bookings');
-  const businessName = process.env.NEXT_PUBLIC_BUSINESS_NAME || 'Rahul Raj Astro';
 
   const fetchStats = useCallback(async () => {
     const res = await fetch('/api/admin/stats');
@@ -46,11 +45,7 @@ export default function AdminDashboard() {
 
   const fetchBookings = useCallback(async () => {
     setLoading(true);
-    const params = new URLSearchParams({
-      page: String(page),
-      status: filterStatus,
-      search,
-    });
+    const params = new URLSearchParams({ page: String(page), status: filterStatus, search });
     const res = await fetch(`/api/admin/bookings?${params}`);
     if (res.status === 401) { router.push('/admin'); return; }
     const data = await res.json();
@@ -69,13 +64,8 @@ export default function AdminDashboard() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status }),
     });
-    if (res.ok) {
-      toast.success(`Booking ${status.toLowerCase()}`);
-      fetchBookings();
-      fetchStats();
-    } else {
-      toast.error('Failed to update booking');
-    }
+    if (res.ok) { toast.success(`Booking ${status.toLowerCase()}`); fetchBookings(); fetchStats(); }
+    else toast.error('Failed to update booking');
   };
 
   const handleLogout = async () => {
@@ -84,156 +74,134 @@ export default function AdminDashboard() {
   };
 
   const statusBadge = (status: string) => {
-    if (status === 'CONFIRMED') return <span className="badge badge-green">Confirmed</span>;
-    if (status === 'PENDING') return <span className="badge badge-yellow">Pending</span>;
-    if (status === 'CANCELLED') return <span className="badge badge-red">Cancelled</span>;
-    return <span className="badge badge-gray">{status}</span>;
+    if (status === 'CONFIRMED') return <span style={{background:'#dcfce7',color:'#166534',fontSize:'11px',fontWeight:700,padding:'3px 8px',borderRadius:'999px'}}>Confirmed</span>;
+    if (status === 'PENDING') return <span style={{background:'#fef3c7',color:'#92400e',fontSize:'11px',fontWeight:700,padding:'3px 8px',borderRadius:'999px'}}>Pending</span>;
+    return <span style={{background:'#fee2e2',color:'#991b1b',fontSize:'11px',fontWeight:700,padding:'3px 8px',borderRadius:'999px'}}>Cancelled</span>;
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Top Bar */}
-      <header className="hero-gradient px-6 py-4 flex justify-between items-center sticky top-0 z-50">
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-saffron" />
-          <span className="font-display text-white">{businessName}</span>
-          <span className="text-deep-400 text-sm hidden sm:block">— Admin</span>
+    <div style={{minHeight:'100vh',background:'#f9fafb'}}>
+      <header style={{background:'linear-gradient(135deg,#080e24,#2f4694)',padding:'14px 24px',display:'flex',justifyContent:'space-between',alignItems:'center',position:'sticky',top:0,zIndex:50}}>
+        <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
+          <Sparkles style={{width:'16px',height:'16px',color:'#E8A020'}} />
+          <span style={{color:'#fff',fontFamily:'Georgia,serif',fontWeight:700}}>OMKKAAR Admin</span>
         </div>
-        <button onClick={handleLogout} className="flex items-center gap-1.5 text-deep-300 hover:text-white text-sm transition-colors">
-          <LogOut className="w-4 h-4" /> Logout
+        <button onClick={handleLogout} style={{display:'flex',alignItems:'center',gap:'6px',color:'rgba(255,255,255,0.6)',background:'none',border:'none',cursor:'pointer',fontSize:'14px'}}>
+          <LogOut style={{width:'14px',height:'14px'}} /> Logout
         </button>
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div style={{maxWidth:'1200px',margin:'0 auto',padding:'24px'}}>
 
-        {/* Stats Grid */}
+        {/* Stats */}
         {stats && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-            <StatCard icon={<Calendar className="w-5 h-5 text-deep-500" />} label="This Month" value={stats.monthBookings} sub="bookings" />
-            <StatCard icon={<Users className="w-5 h-5 text-emerald-500" />} label="Today" value={stats.todayBookings} sub="confirmed" />
-            <StatCard icon={<IndianRupee className="w-5 h-5 text-saffron" />} label="Month Revenue" value={formatPrice(stats.monthRevenue)} sub="collected" />
-            <StatCard icon={<TrendingUp className="w-5 h-5 text-purple-500" />} label="Total Revenue" value={formatPrice(stats.totalRevenue)} sub="all time" />
+          <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'16px',marginBottom:'24px'}}>
+            {[
+              { icon: <Calendar style={{width:'18px',height:'18px',color:'#2f4694'}} />, label:'This Month', value:stats.monthBookings, sub:'bookings' },
+              { icon: <Users style={{width:'18px',height:'18px',color:'#16a34a'}} />, label:'Today', value:stats.todayBookings, sub:'confirmed' },
+              { icon: <IndianRupee style={{width:'18px',height:'18px',color:'#d97706'}} />, label:'Month Revenue', value:formatPrice(stats.monthRevenue), sub:'collected' },
+              { icon: <TrendingUp style={{width:'18px',height:'18px',color:'#7c3aed'}} />, label:'Total Revenue', value:formatPrice(stats.totalRevenue), sub:'all time' },
+            ].map(s => (
+              <div key={s.label} style={{background:'#fff',borderRadius:'16px',border:'1px solid #e5e7eb',padding:'20px'}}>
+                <div style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'10px'}}>{s.icon}<span style={{fontSize:'11px',fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#6b7280'}}>{s.label}</span></div>
+                <div style={{fontFamily:'Georgia,serif',fontSize:'24px',fontWeight:700,color:'#111'}}>{s.value}</div>
+                <div style={{fontSize:'11px',color:'#9ca3af',marginTop:'2px'}}>{s.sub}</div>
+              </div>
+            ))}
           </div>
         )}
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-6">
-          <button
-            onClick={() => setActiveTab('bookings')}
-            className={cn('px-5 py-2.5 rounded-xl font-semibold text-sm transition-all',
-              activeTab === 'bookings' ? 'bg-deep-500 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-300')}
-          >
-            Bookings ({total})
-          </button>
-          <button
-            onClick={() => setActiveTab('slots')}
-            className={cn('px-5 py-2.5 rounded-xl font-semibold text-sm transition-all',
-              activeTab === 'slots' ? 'bg-deep-500 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-300')}
-          >
-            <Plus className="w-4 h-4 inline mr-1" />Manage Slots
-          </button>
+        <div style={{display:'flex',gap:'8px',marginBottom:'20px'}}>
+          {[['bookings',`Bookings (${total})`],['slots','Manage Slots']].map(([tab,label]) => (
+            <button key={tab} onClick={() => setActiveTab(tab as 'bookings'|'slots')}
+              style={{padding:'10px 20px',borderRadius:'10px',fontWeight:700,fontSize:'13px',cursor:'pointer',border:'1px solid',
+                background: activeTab===tab ? '#2f4694' : '#fff',
+                color: activeTab===tab ? '#fff' : '#374151',
+                borderColor: activeTab===tab ? '#2f4694' : '#e5e7eb',
+              }}>
+              {tab === 'slots' && <Plus style={{width:'14px',height:'14px',display:'inline',marginRight:'4px',verticalAlign:'middle'}} />}
+              {label}
+            </button>
+          ))}
         </div>
 
+        {/* Bookings Tab */}
         {activeTab === 'bookings' && (
           <>
-            {/* Filters */}
-            <div className="flex flex-col sm:flex-row gap-3 mb-4">
-              <div className="relative flex-1">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-deep-400"
-                  placeholder="Search by name, email, phone..."
-                  value={search}
-                  onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                />
+            <div style={{display:'flex',gap:'10px',marginBottom:'16px',flexWrap:'wrap'}}>
+              <div style={{position:'relative',flex:1,minWidth:'200px'}}>
+                <Search style={{width:'14px',height:'14px',position:'absolute',left:'12px',top:'50%',transform:'translateY(-50%)',color:'#9ca3af'}} />
+                <input style={{width:'100%',paddingLeft:'36px',paddingRight:'16px',paddingTop:'10px',paddingBottom:'10px',borderRadius:'10px',border:'1px solid #e5e7eb',fontSize:'13px',outline:'none'}}
+                  placeholder="Search name, email, phone..." value={search}
+                  onChange={e => { setSearch(e.target.value); setPage(1); }} />
               </div>
-              <div className="flex gap-2">
-                {(['ALL', 'CONFIRMED', 'PENDING', 'CANCELLED'] as FilterStatus[]).map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => { setFilterStatus(s); setPage(1); }}
-                    className={cn(
-                      'px-3 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap',
-                      filterStatus === s ? 'bg-deep-500 text-white' : 'bg-white border border-gray-200 text-gray-600'
-                    )}
-                  >
-                    {s}
-                  </button>
+              <div style={{display:'flex',gap:'6px'}}>
+                {(['ALL','CONFIRMED','PENDING','CANCELLED'] as FilterStatus[]).map(s => (
+                  <button key={s} onClick={() => { setFilterStatus(s); setPage(1); }}
+                    style={{padding:'8px 14px',borderRadius:'10px',fontSize:'11px',fontWeight:700,cursor:'pointer',border:'1px solid',
+                      background: filterStatus===s ? '#2f4694' : '#fff',
+                      color: filterStatus===s ? '#fff' : '#374151',
+                      borderColor: filterStatus===s ? '#2f4694' : '#e5e7eb',
+                    }}>{s}</button>
                 ))}
-                <button onClick={fetchBookings} className="p-2 rounded-xl bg-white border border-gray-200 hover:bg-gray-50">
-                  <RefreshCw className="w-4 h-4 text-gray-500" />
+                <button onClick={fetchBookings} style={{padding:'8px',borderRadius:'10px',border:'1px solid #e5e7eb',background:'#fff',cursor:'pointer'}}>
+                  <RefreshCw style={{width:'14px',height:'14px',color:'#6b7280'}} />
                 </button>
               </div>
             </div>
 
-            {/* Bookings Table */}
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+            <div style={{background:'#fff',borderRadius:'16px',border:'1px solid #e5e7eb',overflow:'hidden'}}>
               {loading ? (
-                <div className="py-16 text-center text-gray-400">
-                  <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2" />
-                  Loading bookings...
+                <div style={{padding:'60px',textAlign:'center',color:'#9ca3af'}}>
+                  <RefreshCw style={{width:'24px',height:'24px',margin:'0 auto 8px',display:'block'}} />
+                  Loading...
                 </div>
               ) : bookings.length === 0 ? (
-                <div className="py-16 text-center text-gray-400">
-                  <Calendar className="w-10 h-10 mx-auto mb-3 opacity-40" />
+                <div style={{padding:'60px',textAlign:'center',color:'#9ca3af'}}>
+                  <Calendar style={{width:'36px',height:'36px',margin:'0 auto 12px',display:'block',opacity:0.4}} />
                   No bookings found
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead className="bg-gray-50 border-b border-gray-200">
-                      <tr>
-                        {['Customer', 'Service', 'Date & Time', 'Amount', 'Status', 'Actions'].map((h) => (
-                          <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">{h}</th>
+                <div style={{overflowX:'auto'}}>
+                  <table style={{width:'100%',fontSize:'13px',borderCollapse:'collapse'}}>
+                    <thead>
+                      <tr style={{background:'#f9fafb',borderBottom:'1px solid #e5e7eb'}}>
+                        {['Customer','Service','Date & Time','Amount','Status','Actions'].map(h => (
+                          <th key={h} style={{padding:'12px 16px',textAlign:'left',fontSize:'11px',fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em',color:'#6b7280'}}>{h}</th>
                         ))}
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
-                      {bookings.map((b) => (
-                        <tr key={b.id} className="hover:bg-gray-50/60 transition-colors">
-                          <td className="px-4 py-3">
-                            <div className="font-medium text-gray-800">{b.customerName}</div>
-                            <div className="text-xs text-gray-400">{b.customerEmail}</div>
-                            <div className="text-xs text-gray-400">{b.customerPhone}</div>
+                    <tbody>
+                      {bookings.map(b => (
+                        <tr key={b.id} style={{borderBottom:'1px solid #f3f4f6'}}>
+                          <td style={{padding:'12px 16px'}}>
+                            <div style={{fontWeight:600,color:'#111'}}>{b.customerName}</div>
+                            <div style={{fontSize:'12px',color:'#6b7280'}}>{b.customerEmail}</div>
+                            <div style={{fontSize:'12px',color:'#6b7280'}}>{b.customerPhone}</div>
                           </td>
-                          <td className="px-4 py-3">
-                            <div className="text-gray-700">{b.service?.name}</div>
-                          </td>
-                          <td className="px-4 py-3">
-                            <div className="text-gray-700 whitespace-nowrap">
-                              {b.slot && formatDate(b.slot.date + 'T00:00:00')}
-                            </div>
-                            <div className="text-xs text-gray-400 flex items-center gap-1">
-                              <Clock className="w-3 h-3" />
+                          <td style={{padding:'12px 16px',color:'#374151'}}>{b.service?.name}</td>
+                          <td style={{padding:'12px 16px'}}>
+                            <div style={{color:'#374151'}}>{b.slot && formatDate(b.slot.date + 'T00:00:00')}</div>
+                            <div style={{fontSize:'12px',color:'#6b7280',display:'flex',alignItems:'center',gap:'4px'}}>
+                              <Clock style={{width:'11px',height:'11px'}} />
                               {b.slot && formatTime(b.slot.startTime)}
                             </div>
                           </td>
-                          <td className="px-4 py-3 font-semibold text-saffron">
-                            {formatPrice(b.amountPaid)}
-                          </td>
-                          <td className="px-4 py-3">
-                            {statusBadge(b.status)}
-                          </td>
-                          <td className="px-4 py-3">
-                            <div className="flex gap-1">
+                          <td style={{padding:'12px 16px',fontWeight:700,color:'#d97706'}}>{formatPrice(b.amountPaid)}</td>
+                          <td style={{padding:'12px 16px'}}>{statusBadge(b.status)}</td>
+                          <td style={{padding:'12px 16px'}}>
+                            <div style={{display:'flex',gap:'4px'}}>
                               {b.status !== 'CONFIRMED' && (
-                                <button
-                                  onClick={() => handleStatusChange(b.id, 'CONFIRMED')}
-                                  title="Confirm"
-                                  className="p-1.5 rounded-lg hover:bg-emerald-50 text-emerald-600 transition-colors"
-                                >
-                                  <CheckCircle2 className="w-4 h-4" />
+                                <button onClick={() => handleStatusChange(b.id,'CONFIRMED')}
+                                  style={{padding:'6px',borderRadius:'8px',border:'none',background:'none',cursor:'pointer',color:'#16a34a'}} title="Confirm">
+                                  <CheckCircle2 style={{width:'16px',height:'16px'}} />
                                 </button>
                               )}
                               {b.status !== 'CANCELLED' && (
-                                <button
-                                  onClick={() => {
-                                    if (confirm('Cancel this booking?')) handleStatusChange(b.id, 'CANCELLED');
-                                  }}
-                                  title="Cancel"
-                                  className="p-1.5 rounded-lg hover:bg-red-50 text-red-500 transition-colors"
-                                >
-                                  <XCircle className="w-4 h-4" />
+                                <button onClick={() => { if(confirm('Cancel?')) handleStatusChange(b.id,'CANCELLED'); }}
+                                  style={{padding:'6px',borderRadius:'8px',border:'none',background:'none',cursor:'pointer',color:'#dc2626'}} title="Cancel">
+                                  <XCircle style={{width:'16px',height:'16px'}} />
                                 </button>
                               )}
                             </div>
@@ -245,24 +213,17 @@ export default function AdminDashboard() {
                 </div>
               )}
 
-              {/* Pagination */}
               {totalPages > 1 && (
-                <div className="flex justify-between items-center px-4 py-3 border-t border-gray-100">
-                  <span className="text-xs text-gray-400">Page {page} of {totalPages} ({total} total)</span>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setPage(p => p - 1)}
-                      disabled={page === 1}
-                      className="p-1.5 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50"
-                    >
-                      <ChevronLeft className="w-4 h-4" />
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'12px 16px',borderTop:'1px solid #f3f4f6'}}>
+                  <span style={{fontSize:'12px',color:'#6b7280'}}>Page {page} of {totalPages} ({total} total)</span>
+                  <div style={{display:'flex',gap:'6px'}}>
+                    <button onClick={() => setPage(p=>p-1)} disabled={page===1}
+                      style={{padding:'6px',borderRadius:'8px',border:'1px solid #e5e7eb',background:'#fff',cursor:'pointer',opacity:page===1?0.4:1}}>
+                      <ChevronLeft style={{width:'14px',height:'14px'}} />
                     </button>
-                    <button
-                      onClick={() => setPage(p => p + 1)}
-                      disabled={page >= totalPages}
-                      className="p-1.5 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50"
-                    >
-                      <ChevronRight className="w-4 h-4" />
+                    <button onClick={() => setPage(p=>p+1)} disabled={page>=totalPages}
+                      style={{padding:'6px',borderRadius:'8px',border:'1px solid #e5e7eb',background:'#fff',cursor:'pointer',opacity:page>=totalPages?0.4:1}}>
+                      <ChevronRight style={{width:'14px',height:'14px'}} />
                     </button>
                   </div>
                 </div>
@@ -277,118 +238,208 @@ export default function AdminDashboard() {
   );
 }
 
-function StatCard({ icon, label, value, sub }: { icon: React.ReactNode; label: string; value: string | number; sub: string }) {
-  return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-5">
-      <div className="flex items-center gap-2 mb-3">{icon}<span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{label}</span></div>
-      <div className="font-display text-2xl font-bold text-gray-800">{value}</div>
-      <div className="text-xs text-gray-400 mt-0.5">{sub}</div>
-    </div>
-  );
-}
-
 function SlotManager() {
   const [services, setServices] = useState<{ id: string; name: string }[]>([]);
   const [serviceId, setServiceId] = useState('');
-  const [date, setDate] = useState('');
-  const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [startTime, setStartTime] = useState('09:00');
+  const [endTime, setEndTime] = useState('18:00');
+  const [duration, setDuration] = useState(15);
+  const [breakTime, setBreakTime] = useState(0);
+  const [offDays, setOffDays] = useState<number[]>([0]);
   const [loading, setLoading] = useState(false);
-
-  const TIME_OPTIONS = [
-    { start: '09:00', end: '10:00' }, { start: '10:00', end: '11:00' },
-    { start: '11:00', end: '12:00' }, { start: '12:00', end: '13:00' },
-    { start: '13:00', end: '14:00' }, { start: '15:00', end: '16:00' },
-    { start: '16:00', end: '17:00' }, { start: '17:00', end: '18:00' },
-    { start: '18:00', end: '19:00' }, { start: '19:00', end: '20:00' },
-  ];
+  const [preview, setPreview] = useState<{start:string,end:string}[]>([]);
 
   useEffect(() => {
     fetch('/api/services').then(r => r.json()).then(setServices);
   }, []);
 
-  const toggleTime = (start: string) => {
-    setSelectedTimes(prev =>
-      prev.includes(start) ? prev.filter(t => t !== start) : [...prev, start]
-    );
+  const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  const toggleOffDay = (day: number) => {
+    setOffDays(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]);
+  };
+
+  const generateSlots = () => {
+    const slots: {start:string,end:string}[] = [];
+    let [h, m] = startTime.split(':').map(Number);
+    const [endH, endM] = endTime.split(':').map(Number);
+    const endMins = endH * 60 + endM;
+    while (true) {
+      const slotEndMins = h * 60 + m + duration;
+      if (slotEndMins > endMins) break;
+      const eH = Math.floor(slotEndMins / 60);
+      const eM = slotEndMins % 60;
+      slots.push({
+        start: `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`,
+        end: `${String(eH).padStart(2,'0')}:${String(eM).padStart(2,'0')}`
+      });
+      const next = slotEndMins + breakTime;
+      h = Math.floor(next / 60);
+      m = next % 60;
+      if (h * 60 + m >= endMins) break;
+    }
+    return slots;
+  };
+
+  const getDates = () => {
+    const dates: string[] = [];
+    if (!startDate || !endDate) return dates;
+    const start = new Date(startDate + 'T00:00:00');
+    const end = new Date(endDate + 'T00:00:00');
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      if (!offDays.includes(d.getDay())) {
+        dates.push(d.toISOString().split('T')[0]);
+      }
+    }
+    return dates;
+  };
+
+  const handlePreview = () => {
+    const slots = generateSlots();
+    setPreview(slots);
+    if (slots.length === 0) toast.error('No slots — check time settings');
+    else toast.success(`${slots.length} slots per day`);
   };
 
   const handleCreate = async () => {
-    if (!serviceId || !date || !selectedTimes.length) {
-      toast.error('Select service, date, and at least one time slot');
-      return;
-    }
+    if (!serviceId || !startDate || !endDate) { toast.error('Service aur dates select karo'); return; }
+    const slots = generateSlots();
+    const dates = getDates();
+    if (slots.length === 0) { toast.error('No slots — check time settings'); return; }
+    if (dates.length === 0) { toast.error('No valid dates'); return; }
+
     setLoading(true);
-    const slots = selectedTimes.map(start => ({
-      startTime: start,
-      endTime: TIME_OPTIONS.find(t => t.start === start)?.end || '',
-    }));
-    const res = await fetch('/api/admin/slots', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ serviceId, date, slots }),
-    });
-    const data = await res.json();
-    if (res.ok) {
-      toast.success(`${data.created} slot(s) created`);
-      setSelectedTimes([]);
-    } else {
-      toast.error(data.error);
+    let total = 0;
+    for (const date of dates) {
+      const res = await fetch('/api/admin/slots', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ serviceId, date, slots }),
+      });
+      if (res.ok) { const d = await res.json(); total += d.created; }
     }
+    toast.success(`✅ ${total} slots created across ${dates.length} days!`);
     setLoading(false);
+    setPreview([]);
   };
 
+  const inputStyle = {width:'100%',padding:'10px 12px',borderRadius:'8px',border:'1px solid #e5e7eb',fontSize:'13px',outline:'none',background:'#fff'};
+  const labelStyle = {display:'block' as const,fontSize:'11px',fontWeight:700 as const,textTransform:'uppercase' as const,letterSpacing:'0.05em',color:'#6b7280',marginBottom:'6px'};
+
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-6 max-w-lg">
-      <h3 className="font-display text-lg text-gray-800 mb-5">Add Availability Slots</h3>
-      <div className="space-y-4">
-        <div>
-          <label className="label">Service</label>
-          <select
-            className="input-field"
-            value={serviceId}
-            onChange={e => setServiceId(e.target.value)}
-          >
-            <option value="">Select a service</option>
+    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'20px',alignItems:'start'}}>
+      <div style={{background:'#fff',borderRadius:'16px',border:'1px solid #e5e7eb',padding:'24px'}}>
+        <h3 style={{fontFamily:'Georgia,serif',fontSize:'18px',marginBottom:'20px',color:'#111'}}>Slot Settings</h3>
+
+        <div style={{marginBottom:'14px'}}>
+          <label style={labelStyle}>Service</label>
+          <select style={inputStyle} value={serviceId} onChange={e => setServiceId(e.target.value)}>
+            <option value="">Select service</option>
             {services.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
         </div>
-        <div>
-          <label className="label">Date</label>
-          <input
-            type="date"
-            className="input-field"
-            min={new Date().toISOString().split('T')[0]}
-            value={date}
-            onChange={e => setDate(e.target.value)}
-          />
+
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px',marginBottom:'14px'}}>
+          <div>
+            <label style={labelStyle}>From Date</label>
+            <input type="date" style={inputStyle} min={new Date().toISOString().split('T')[0]} value={startDate} onChange={e => setStartDate(e.target.value)} />
+          </div>
+          <div>
+            <label style={labelStyle}>To Date</label>
+            <input type="date" style={inputStyle} min={startDate||new Date().toISOString().split('T')[0]} value={endDate} onChange={e => setEndDate(e.target.value)} />
+          </div>
         </div>
-        <div>
-          <label className="label">Time Slots</label>
-          <div className="grid grid-cols-3 gap-2">
-            {TIME_OPTIONS.map(t => (
-              <button
-                key={t.start}
-                onClick={() => toggleTime(t.start)}
-                className={cn(
-                  'px-3 py-2 rounded-xl text-xs font-semibold border-2 transition-all',
-                  selectedTimes.includes(t.start)
-                    ? 'bg-deep-500 text-white border-deep-500'
-                    : 'border-gray-200 text-gray-600 hover:border-gray-300'
-                )}
-              >
-                {formatTime(t.start)}
+
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px',marginBottom:'14px'}}>
+          <div>
+            <label style={labelStyle}>Start Time</label>
+            <input type="time" style={inputStyle} value={startTime} onChange={e => setStartTime(e.target.value)} />
+          </div>
+          <div>
+            <label style={labelStyle}>End Time</label>
+            <input type="time" style={inputStyle} value={endTime} onChange={e => setEndTime(e.target.value)} />
+          </div>
+        </div>
+
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px',marginBottom:'14px'}}>
+          <div>
+            <label style={labelStyle}>Duration (min)</label>
+            <select style={inputStyle} value={duration} onChange={e => setDuration(Number(e.target.value))}>
+              {[10,15,20,30,45,60,90,120].map(d => <option key={d} value={d}>{d} min</option>)}
+            </select>
+          </div>
+          <div>
+            <label style={labelStyle}>Break Between Slots</label>
+            <select style={inputStyle} value={breakTime} onChange={e => setBreakTime(Number(e.target.value))}>
+              {[0,5,10,15,20,30].map(b => <option key={b} value={b}>{b===0?'No break':`${b} min break`}</option>)}
+            </select>
+          </div>
+        </div>
+
+        <div style={{marginBottom:'20px'}}>
+          <label style={labelStyle}>Days Off (click to toggle)</label>
+          <div style={{display:'flex',gap:'6px',flexWrap:'wrap'}}>
+            {DAY_NAMES.map((day,i) => (
+              <button key={day} onClick={() => toggleOffDay(i)}
+                style={{padding:'7px 12px',borderRadius:'8px',fontSize:'12px',fontWeight:700,border:'1px solid',cursor:'pointer',
+                  background:offDays.includes(i)?'#fee2e2':'#f0fdf4',
+                  borderColor:offDays.includes(i)?'#fca5a5':'#86efac',
+                  color:offDays.includes(i)?'#dc2626':'#16a34a'}}>
+                {day} {offDays.includes(i)?'✕':'✓'}
               </button>
             ))}
           </div>
+          <p style={{fontSize:'11px',color:'#9ca3af',marginTop:'6px'}}>Red = off · Green = working</p>
         </div>
-        <button
-          onClick={handleCreate}
-          disabled={loading}
-          className="btn-primary w-full flex items-center justify-center gap-2"
-        >
-          {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
-          Create {selectedTimes.length > 0 ? `${selectedTimes.length} ` : ''}Slot{selectedTimes.length !== 1 ? 's' : ''}
-        </button>
+
+        <div style={{display:'flex',gap:'10px'}}>
+          <button onClick={handlePreview}
+            style={{flex:1,padding:'12px',borderRadius:'10px',border:'2px solid #2f4694',color:'#2f4694',fontWeight:700,fontSize:'13px',cursor:'pointer',background:'#fff'}}>
+            Preview
+          </button>
+          <button onClick={handleCreate} disabled={loading}
+            style={{flex:1,padding:'12px',borderRadius:'10px',border:'none',background:'#2f4694',color:'#fff',fontWeight:700,fontSize:'13px',cursor:'pointer',opacity:loading?0.6:1}}>
+            {loading ? 'Creating...' : 'Create Slots'}
+          </button>
+        </div>
+      </div>
+
+      <div style={{background:'#fff',borderRadius:'16px',border:'1px solid #e5e7eb',padding:'24px'}}>
+        <h3 style={{fontFamily:'Georgia,serif',fontSize:'18px',marginBottom:'6px',color:'#111'}}>Preview</h3>
+        <p style={{fontSize:'12px',color:'#6b7280',marginBottom:'16px'}}>
+          {preview.length > 0 ? `${preview.length} slots per day` : 'Click Preview to see slots'}
+        </p>
+
+        {preview.length > 0 ? (
+          <>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'8px',maxHeight:'320px',overflowY:'auto',marginBottom:'16px'}}>
+              {preview.map((slot,i) => (
+                <div key={i} style={{background:'#f0fdf4',border:'1px solid #86efac',borderRadius:'8px',padding:'8px',textAlign:'center'}}>
+                  <div style={{fontSize:'13px',fontWeight:700,color:'#15803d'}}>{slot.start}</div>
+                  <div style={{fontSize:'10px',color:'#6b7280'}}>→ {slot.end}</div>
+                </div>
+              ))}
+            </div>
+            {startDate && endDate && (
+              <div style={{background:'#eff6ff',border:'1px solid #bfdbfe',borderRadius:'10px',padding:'14px'}}>
+                <div style={{fontSize:'12px',fontWeight:700,color:'#1d4ed8',marginBottom:'6px'}}>Summary</div>
+                <div style={{fontSize:'13px',color:'#1e40af',lineHeight:'1.8'}}>
+                  📅 {getDates().length} working days<br/>
+                  ⏰ {preview.length} slots/day<br/>
+                  📊 Total: <strong>{getDates().length * preview.length} slots</strong><br/>
+                  ⏱ {duration} min {breakTime > 0 ? `+ ${breakTime} min break` : '(no break)'}
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <div style={{textAlign:'center',padding:'48px 0',color:'#9ca3af'}}>
+            <Calendar style={{width:'36px',height:'36px',margin:'0 auto 10px',display:'block',opacity:0.3}} />
+            <div style={{fontSize:'13px'}}>Set settings → Preview → Create</div>
+          </div>
+        )}
       </div>
     </div>
   );
