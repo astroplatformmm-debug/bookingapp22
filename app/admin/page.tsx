@@ -27,7 +27,7 @@ export default function AdminLoginPage() {
 
       if (res.ok) {
         toast.success(`Welcome back, ${data.admin.name}!`);
-        router.push('/admin/dashboard');
+        window.location.href = '/admin/dashboard';
       } else {
         toast.error(data.error || 'Login failed');
       }
