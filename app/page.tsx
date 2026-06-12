@@ -140,7 +140,7 @@ export default function LandingPage() {
         </div>
         <div className="hero-right">
           <div className="photo-wrap">
-            <img src="/mukesh.jpeg" alt="Pt. Mukesh Ravindra Gupta" />
+            <img src="/mukesh.png" alt="Pt. Mukesh Ravindra Gupta" />
             <div className="photo-card">
               <div className="photo-card-name">Pt. Mukesh Ravindra Gupta</div>
               <div className="photo-card-sub">ISO Certified Vedic Astrologer</div>
