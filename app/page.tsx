@@ -5,216 +5,246 @@ export default function LandingPage() {
   return (
     <>
       <style>{`
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #0a0a0f; color: white; font-family: Inter, system-ui, sans-serif; }
-        .urgency { background: linear-gradient(to right, #d97706, #ea580c); color: white; text-align: center; padding: 10px; font-size: 14px; font-weight: 600; }
-        .nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .logo { display: flex; align-items: center; gap: 12px; }
-        .logo-icon { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(to bottom right, #fbbf24, #ea580c); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; }
-        .logo-name { font-weight: 700; font-size: 14px; }
-        .logo-sub { color: #fbbf24; font-size: 12px; }
-        .btn-book { background: #f59e0b; color: black; font-weight: 700; padding: 8px 20px; border-radius: 999px; font-size: 14px; text-decoration: none; }
-        .btn-book:hover { background: #fbbf24; }
-        .hero { padding: 64px 24px 80px; text-align: center; }
-        .hero-pill { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 999px; padding: 8px 16px; font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 32px; }
-        .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; line-height: 1.2; margin-bottom: 24px; font-family: Georgia, serif; }
-        .hero-gradient { background: linear-gradient(to right, #fbbf24, #fb923c, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { font-size: 18px; color: rgba(255,255,255,0.6); max-width: 560px; margin: 0 auto 40px; line-height: 1.6; }
-        .price-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 16px; }
-        .price-old { text-decoration: line-through; color: rgba(255,255,255,0.3); font-size: 20px; }
-        .price-new { background: #f59e0b; color: black; font-size: 32px; font-weight: 900; padding: 4px 16px; border-radius: 8px; }
-        .price-badge { background: rgba(34,197,94,0.2); border: 1px solid rgba(34,197,94,0.4); color: #4ade80; font-size: 14px; padding: 4px 12px; border-radius: 999px; font-weight: 600; }
-        .btn-cta { display: inline-flex; align-items: center; gap: 12px; background: linear-gradient(to right, #f59e0b, #ea580c); color: black; font-weight: 900; font-size: 20px; padding: 20px 40px; border-radius: 16px; text-decoration: none; margin-bottom: 16px; box-shadow: 0 10px 30px rgba(245,158,11,0.3); }
-        .secure { color: rgba(255,255,255,0.4); font-size: 14px; }
-        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; padding: 40px 24px; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.02); max-width: 900px; margin: 0 auto; }
-        .stat { text-align: center; }
-        .stat-num { font-size: 24px; font-weight: 900; color: white; }
-        .stat-label { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 4px; }
-        .astro { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; max-width: 900px; margin: 0 auto; padding: 80px 24px; }
-        .astro img { width: 280px; height: 320px; border-radius: 24px; object-fit: cover; object-position: top; border: 2px solid rgba(245,158,11,0.3); }
-        .astro-tag { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #fbbf24; }
-        .astro h2 { font-size: 30px; font-weight: 900; color: white; margin: 8px 0 4px; font-family: Georgia, serif; }
-        .astro-sub { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 20px; }
-        .check-item { display: flex; align-items: center; gap: 12px; font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 12px; }
-        .check-icon { color: #fbbf24; font-size: 16px; }
-        .btn-outline { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; font-weight: 600; padding: 12px 24px; border-radius: 12px; font-size: 14px; text-decoration: none; margin-top: 24px; }
-        .features { padding: 80px 24px; background: linear-gradient(to bottom, rgba(245,158,11,0.05), transparent); }
-        .features-title { text-align: center; margin-bottom: 48px; }
-        .features-tag { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #fbbf24; }
-        .features h2 { font-size: 30px; font-weight: 900; color: white; margin-top: 8px; font-family: Georgia, serif; }
-        .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; max-width: 750px; margin: 0 auto; }
-        .feature-card { display: flex; gap: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; }
-        .feature-icon { font-size: 30px; flex-shrink: 0; }
-        .feature-title { font-weight: 700; color: white; font-size: 14px; margin-bottom: 4px; }
-        .feature-desc { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5; }
-        .testimonials { max-width: 900px; margin: 0 auto; padding: 80px 24px; }
-        .testimonials-title { text-align: center; margin-bottom: 48px; }
-        .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .testimonial { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; }
-        .testimonial-stars { font-size: 16px; margin-bottom: 12px; }
-        .testimonial-text { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6; margin-bottom: 16px; }
-        .testimonial-name { font-weight: 600; color: white; font-size: 14px; }
-        .testimonial-city { font-size: 12px; color: rgba(255,255,255,0.3); }
-        .faq { max-width: 600px; margin: 0 auto; padding: 40px 24px 160px; }
-        .faq h2 { font-size: 24px; font-weight: 900; color: white; text-align: center; margin-bottom: 40px; font-family: Georgia, serif; }
-        .faq-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; margin-bottom: 12px; }
-        .faq-q { font-weight: 600; color: white; font-size: 14px; margin-bottom: 8px; }
-        .faq-a { font-size: 14px; color: rgba(255,255,255,0.5); }
-        .sticky-cta { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; padding: 16px; background: linear-gradient(to top, #000, rgba(0,0,0,0.95), transparent); }
-        .sticky-inner { max-width: 400px; margin: 0 auto; }
-        .sticky-btn { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(to right, #f59e0b, #ea580c); color: black; font-weight: 900; padding: 16px 24px; border-radius: 16px; text-decoration: none; box-shadow: 0 10px 40px rgba(245,158,11,0.4); }
-        .sticky-left-title { font-size: 16px; }
-        .sticky-left-sub { font-size: 12px; font-weight: 400; opacity: 0.7; }
-        .sticky-price { font-size: 24px; font-weight: 900; }
-        .footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 32px 24px; text-align: center; }
-        .footer-logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; }
-        .footer-icon { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(to bottom right, #fbbf24, #ea580c); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
-        .footer-name { font-weight: 700; color: white; }
-        .footer-addr { font-size: 12px; color: rgba(255,255,255,0.3); }
-        @media (max-width: 640px) {
-          .stats { grid-template-columns: repeat(2, 1fr); }
-          .astro { grid-template-columns: 1fr; }
-          .astro img { width: 200px; height: 240px; margin: 0 auto; display: block; }
-          .features-grid { grid-template-columns: 1fr; }
-          .testimonials-grid { grid-template-columns: 1fr; }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:Inter,system-ui,sans-serif;background:#fffdf8;color:#1a1208}
+        a{text-decoration:none}
+        .urgency{background:#c2410c;color:#fff;text-align:center;padding:10px 16px;font-size:13px;font-weight:600;letter-spacing:0.02em}
+        .nav{display:flex;justify-content:space-between;align-items:center;padding:14px 32px;background:#fff;border-bottom:1px solid #f0e8d0;position:sticky;top:0;z-index:99}
+        .logo-wrap{display:flex;align-items:center;gap:10px}
+        .logo-badge{width:38px;height:38px;border-radius:50%;background:#c2410c;color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900}
+        .logo-text{font-weight:800;font-size:15px;color:#1a1208;letter-spacing:-0.02em}
+        .logo-sub{font-size:11px;color:#78461a;font-weight:500}
+        .nav-actions{display:flex;align-items:center;gap:12px}
+        .nav-phone{font-size:13px;color:#78461a;font-weight:500}
+        .btn-nav{background:#c2410c;color:#fff;padding:9px 20px;border-radius:8px;font-weight:700;font-size:13px}
+        .hero{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:88vh;align-items:center;max-width:1100px;margin:0 auto;padding:60px 32px}
+        .hero-left{padding-right:48px}
+        .hero-badge{display:inline-flex;align-items:center;gap:6px;background:#fef3c7;border:1px solid #fcd34d;color:#92400e;font-size:12px;font-weight:700;padding:6px 14px;border-radius:999px;margin-bottom:24px;letter-spacing:0.04em;text-transform:uppercase}
+        .hero h1{font-size:clamp(2rem,3.5vw,3rem);font-weight:900;line-height:1.15;color:#1a1208;font-family:Georgia,serif;margin-bottom:20px}
+        .hero h1 em{font-style:normal;color:#c2410c}
+        .hero-sub{font-size:16px;color:#5a3a1a;line-height:1.7;margin-bottom:32px}
+        .price-block{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+        .p-old{font-size:18px;color:#a0856a;text-decoration:line-through}
+        .p-new{font-size:42px;font-weight:900;color:#c2410c;line-height:1}
+        .p-off{background:#dcfce7;border:1px solid #86efac;color:#14532d;font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px;text-transform:uppercase}
+        .btn-cta{display:inline-flex;align-items:center;gap:10px;background:#c2410c;color:#fff;font-weight:800;font-size:17px;padding:18px 36px;border-radius:10px;width:100%;justify-content:center;margin-bottom:14px}
+        .btn-cta:hover{background:#b91c1c}
+        .btn-cta-sub{color:#78561a;font-size:13px;text-align:center;display:block}
+        .trust-row{display:flex;gap:20px;margin-top:28px;flex-wrap:wrap}
+        .trust-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#78461a;font-weight:600}
+        .hero-right{position:relative}
+        .photo-wrap{position:relative;width:100%}
+        .photo-wrap img{width:100%;height:520px;object-fit:cover;object-position:top;border-radius:16px;display:block}
+        .photo-card{position:absolute;bottom:24px;left:-24px;background:#fff;border-radius:12px;padding:14px 18px;box-shadow:0 4px 24px rgba(0,0,0,0.12);border:1px solid #f0e8d0}
+        .photo-card-name{font-weight:800;font-size:14px;color:#1a1208}
+        .photo-card-sub{font-size:12px;color:#78461a;margin-top:2px}
+        .photo-stars{font-size:13px;margin-top:6px}
+        .photo-badge{position:absolute;top:20px;right:-16px;background:#c2410c;color:#fff;border-radius:10px;padding:10px 14px;text-align:center}
+        .photo-badge-num{font-size:22px;font-weight:900;line-height:1}
+        .photo-badge-txt{font-size:10px;font-weight:600;opacity:0.9}
+        .stats{background:#fff;border-top:1px solid #f0e8d0;border-bottom:1px solid #f0e8d0}
+        .stats-inner{display:grid;grid-template-columns:repeat(4,1fr);max-width:900px;margin:0 auto;padding:28px 32px}
+        .stat{text-align:center;border-right:1px solid #f0e8d0;padding:0 24px}
+        .stat:last-child{border-right:none}
+        .stat-num{font-size:26px;font-weight:900;color:#c2410c;font-family:Georgia,serif}
+        .stat-label{font-size:12px;color:#78461a;margin-top:2px;font-weight:500}
+        .section{padding:72px 32px;max-width:1000px;margin:0 auto}
+        .sec-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#c2410c;margin-bottom:8px}
+        .sec-h2{font-size:clamp(1.5rem,2.5vw,2rem);font-weight:900;color:#1a1208;font-family:Georgia,serif;margin-bottom:12px}
+        .sec-sub{font-size:15px;color:#5a3a1a;line-height:1.6;margin-bottom:40px}
+        .what-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+        .what-card{background:#fff;border:1px solid #f0e8d0;border-radius:12px;padding:22px;transition:border-color 0.2s}
+        .what-card:hover{border-color:#fcd34d}
+        .what-icon{font-size:26px;margin-bottom:10px}
+        .what-title{font-weight:700;font-size:14px;color:#1a1208;margin-bottom:4px}
+        .what-desc{font-size:13px;color:#78461a;line-height:1.5}
+        .testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+        .tcard{background:#fff;border:1px solid #f0e8d0;border-radius:12px;padding:24px}
+        .tcard-stars{font-size:14px;margin-bottom:10px}
+        .tcard-text{font-size:14px;color:#5a3a1a;line-height:1.6;font-style:italic;margin-bottom:14px}
+        .tcard-name{font-weight:700;font-size:13px;color:#1a1208}
+        .tcard-city{font-size:12px;color:#a0856a}
+        .faq-list{max-width:680px}
+        .faq-item{border:1px solid #f0e8d0;border-radius:10px;padding:18px 22px;margin-bottom:10px;background:#fff}
+        .faq-q{font-weight:700;font-size:14px;color:#1a1208;margin-bottom:6px}
+        .faq-a{font-size:13px;color:#78461a;line-height:1.6}
+        .cta-banner{background:#c2410c;padding:60px 32px;text-align:center}
+        .cta-banner h2{font-size:2rem;font-weight:900;color:#fff;font-family:Georgia,serif;margin-bottom:8px}
+        .cta-banner p{color:rgba(255,255,255,0.8);font-size:15px;margin-bottom:28px}
+        .btn-white{background:#fff;color:#c2410c;font-weight:800;font-size:16px;padding:16px 40px;border-radius:10px;display:inline-block}
+        .btn-white:hover{background:#fef3c7}
+        .footer{background:#1a1208;padding:32px;text-align:center}
+        .footer-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px}
+        .footer-badge{width:30px;height:30px;border-radius:50%;background:#c2410c;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px}
+        .footer-name{font-weight:700;color:#fff;font-size:15px}
+        .footer-addr{font-size:12px;color:#a0856a;margin-top:4px}
+        .sticky{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#fff;border-top:2px solid #f0e8d0;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;max-width:500px;margin:0 auto;left:50%;transform:translateX(-50%);border-radius:16px 16px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,0.1)}
+        .sticky-txt{font-size:13px;color:#78461a;font-weight:600}
+        .sticky-price{font-size:22px;font-weight:900;color:#c2410c}
+        .sticky-btn{background:#c2410c;color:#fff;font-weight:700;font-size:14px;padding:12px 24px;border-radius:8px}
+        .pb{padding-bottom:80px}
+        @media(max-width:768px){
+          .hero{grid-template-columns:1fr;padding:32px 16px;min-height:auto;gap:32px}
+          .hero-left{padding-right:0}
+          .hero-right{order:-1}
+          .photo-wrap img{height:320px}
+          .photo-card{left:12px;bottom:12px}
+          .photo-badge{top:12px;right:8px}
+          .stats-inner{grid-template-columns:repeat(2,1fr);gap:16px}
+          .stat{border-right:none;border-bottom:1px solid #f0e8d0;padding-bottom:16px}
+          .what-grid{grid-template-columns:1fr}
+          .testimonials-grid{grid-template-columns:1fr}
+          .section{padding:40px 16px}
+          .nav{padding:12px 16px}
         }
       `}</style>
 
-      <div className="urgency">🔥 सीमित स्लॉट बचे हैं — आज ही बुक करें और अपना भविष्य जानें! 🔥</div>
+      <div className="urgency">🔥 LIMITED OFFER — सिर्फ ₹199 में Kundali Consultation · आज ही बुक करें!</div>
 
       <nav className="nav">
-        <div className="logo">
-          <div className="logo-icon">ॐ</div>
+        <div className="logo-wrap">
+          <div className="logo-badge">ॐ</div>
           <div>
-            <div className="logo-name">OMKKAAR</div>
-            <div className="logo-sub">Astroworld</div>
+            <div className="logo-text">OMKKAAR</div>
+            <div className="logo-sub">Astroworld · Est. 2000</div>
           </div>
         </div>
-        <div style={{display:'flex', alignItems:'center', gap:'12px'}}>
-          <a href="tel:+917069110573" style={{color:'rgba(255,255,255,0.6)', fontSize:'14px', textDecoration:'none', display:'flex', alignItems:'center', gap:'6px'}}>
-            📞 +91 70691 10573
-          </a>
-          <Link href="/book" className="btn-book">अभी बुक करें</Link>
+        <div className="nav-actions">
+          <a href="tel:+917069110573" className="nav-phone">📞 +91 70691 10573</a>
+          <Link href="/book" className="btn-nav">अभी बुक करें →</Link>
         </div>
       </nav>
 
-      <section className="hero">
-        <div className="hero-pill">12,000+ लोगों ने अपना भविष्य जाना ⭐⭐⭐⭐⭐</div>
-        <h1>
-          क्या आपकी कुंडली में<br />
-          <span className="hero-gradient">छुपा है आपका भाग्य?</span>
-        </h1>
-        <p>25+ वर्षों के अनुभव के साथ <strong style={{color:'white'}}>Pt. Mukesh Ravindra Gupta</strong> आपकी कुंडली देखकर बताएंगे — प्रेम, करियर, विवाह और भविष्य का सच।</p>
-        <div className="price-row">
-          <span className="price-old">₹999</span>
-          <span className="price-new">₹199</span>
-          <span className="price-badge">80% OFF</span>
+      <div className="hero">
+        <div className="hero-left">
+          <div className="hero-badge">⭐ 12,000+ Families Consulted</div>
+          <h1>अपनी कुंडली में<br /><em>छुपा भाग्य</em><br />जानें आज ही</h1>
+          <p className="hero-sub">
+            India के trusted Vedic astrologer <strong>Pt. Mukesh Ravindra Gupta</strong> के साथ। 25+ साल का अनुभव, ISO certified, 12,000+ satisfied clients।
+          </p>
+          <div className="price-block">
+            <span className="p-old">₹999</span>
+            <span className="p-new">₹199</span>
+            <span className="p-off">80% off</span>
+          </div>
+          <Link href="/book" className="btn-cta">
+            अभी कुंडली बुक करें →
+          </Link>
+          <span className="btn-cta-sub">✅ Razorpay Secured · UPI / Card / NetBanking</span>
+          <div className="trust-row">
+            <span className="trust-item">🔒 100% Secure</span>
+            <span className="trust-item">⚡ 24hr Delivery</span>
+            <span className="trust-item">🎯 100% Accurate</span>
+            <span className="trust-item">📞 Personal Call</span>
+          </div>
         </div>
-        <div><Link href="/book" className="btn-cta">अपनी कुंडली अभी बुक करें →</Link></div>
-        <div className="secure">✅ 100% Secure Payment · Razorpay Protected</div>
-      </section>
+        <div className="hero-right">
+          <div className="photo-wrap">
+            <img src="/mukesh.jpeg" alt="Pt. Mukesh Ravindra Gupta" />
+            <div className="photo-card">
+              <div className="photo-card-name">Pt. Mukesh Ravindra Gupta</div>
+              <div className="photo-card-sub">ISO Certified Vedic Astrologer</div>
+              <div className="photo-stars">⭐⭐⭐⭐⭐ 4.9/5</div>
+            </div>
+            <div className="photo-badge">
+              <div className="photo-badge-num">25+</div>
+              <div className="photo-badge-txt">Years Exp.</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <div style={{maxWidth:'900px', margin:'0 auto'}}>
-        <div className="stats">
-          {[['12,000+','संतुष्ट ग्राहक'],['25+ वर्ष','अनुभव'],['4.9/5','औसत रेटिंग'],['24 घंटे','में रिपोर्ट']].map(([num,label])=>(
-            <div key={num} className="stat"><div className="stat-num">{num}</div><div className="stat-label">{label}</div></div>
+      <div className="stats">
+        <div className="stats-inner">
+          {[['12,000+','Consultations Done'],['4.9 / 5','Customer Rating'],['25+ Years','Experience'],['100%','Secure Payment']].map(([n,l])=>(
+            <div key={n} className="stat">
+              <div className="stat-num">{n}</div>
+              <div className="stat-label">{l}</div>
+            </div>
           ))}
         </div>
       </div>
 
-      <section className="astro">
-        <div style={{display:'flex', justifyContent:'center'}}>
-          <img src="/mukesh.jpeg" alt="Pt. Mukesh Ravindra Gupta" style={{width:'280px',height:'320px',borderRadius:'24px',objectFit:'cover',objectPosition:'top',border:'2px solid rgba(245,158,11,0.3)'}} />
-        </div>
-        <div>
-          <div className="astro-tag">आपके ज्योतिषाचार्य</div>
-          <h2>Pt. Mukesh Ravindra Gupta</h2>
-          <div className="astro-sub">Certified Vedic Astrologer · Vadodara, Gujarat</div>
-          {['ISO 9001-2015 Certified Professional','Trademark Certified Astrologer','25+ वर्षों का वैदिक ज्योतिष अनुभव','करियर, विवाह, व्यापार में विशेषज्ञता','12,000+ सफल कुंडली परामर्श'].map(item=>(
-            <div key={item} className="check-item"><span className="check-icon">✓</span>{item}</div>
-          ))}
-          <Link href="/book" className="btn-outline">Pt. Gupta से अभी बात करें →</Link>
-        </div>
-      </section>
-
-      <section className="features">
-        <div className="features-title">
-          <div className="features-tag">सिर्फ ₹199 में मिलेगा</div>
-          <h2>आपको क्या मिलेगा?</h2>
-        </div>
-        <div className="features-grid">
+      <div className="section">
+        <div className="sec-tag">सिर्फ ₹199 में मिलेगा</div>
+        <div className="sec-h2">आपको क्या मिलेगा?</div>
+        <div className="what-grid">
           {[
-            ['📋','विस्तृत कुंडली रिपोर्ट','20+ पेज की PDF रिपोर्ट — सभी 12 भावों का विश्लेषण'],
-            ['🎯','व्यक्तिगत परामर्श','Pt. Gupta के साथ 1-on-1 सत्र — आपके सवालों के जवाब'],
-            ['⚡','24 घंटे में डिलीवरी','बुकिंग के 24 घंटे के भीतर रिपोर्ट और परामर्श'],
-            ['🔮','उपाय और समाधान','ग्रह दोष, करियर, विवाह के लिए व्यावहारिक उपाय'],
-            ['💑','प्रेम और विवाह','सही साथी, विवाह का शुभ समय और संबंध विश्लेषण'],
-            ['💰','धन और करियर','व्यापार, नौकरी और आर्थिक स्थिति का भविष्य'],
+            ['📋','Detailed Kundali Report','20+ page PDF — सभी 12 भावों का विश्लेषण'],
+            ['📞','Personal Consultation','Pt. Gupta के साथ direct phone/WhatsApp call'],
+            ['⚡','24hr Delivery','बुकिंग के 24 घंटे में report और consultation'],
+            ['🔮','Remedies & Solutions','ग्रह दोष, करियर, विवाह के practical उपाय'],
+            ['💑','Love & Marriage','सही साथी और विवाह का शुभ मुहूर्त'],
+            ['💰','Career & Wealth','Business, job aur financial future analysis'],
           ].map(([icon,title,desc])=>(
-            <div key={title} className="feature-card">
-              <div className="feature-icon">{icon}</div>
-              <div><div className="feature-title">{title}</div><div className="feature-desc">{desc}</div></div>
+            <div key={title} className="what-card">
+              <div className="what-icon">{icon}</div>
+              <div className="what-title">{title}</div>
+              <div className="what-desc">{desc}</div>
             </div>
           ))}
         </div>
-      </section>
+      </div>
 
-      <section className="testimonials">
-        <div className="testimonials-title">
-          <div className="features-tag">ग्राहकों की राय</div>
-          <h2 style={{fontSize:'30px',fontWeight:900,color:'white',marginTop:'8px',fontFamily:'Georgia,serif'}}>12,000+ लोगों ने बदली अपनी ज़िंदगी</h2>
-        </div>
+      <div className="section" style={{paddingTop:0}}>
+        <div className="sec-tag">Real Reviews</div>
+        <div className="sec-h2">12,000+ लोगों ने बदली अपनी ज़िंदगी</div>
         <div className="testimonials-grid">
           {[
-            ['Priya Sharma','Ahmedabad','Pt. Gupta जी ने मेरी कुंडली देखकर सटीक भविष्यवाणी की। विवाह का जो समय बताया वो बिल्कुल सही निकला।'],
-            ['Rahul Patel','Surat','करियर में बहुत परेशानी थी। Pt. Gupta के उपाय करने के बाद नई नौकरी मिली। 100% genuine astrologer हैं।'],
-            ['Meera Joshi','Vadodara','बेटे की शादी नहीं हो रही थी। कुंडली मिलान और उपाय के बाद 3 महीने में शादी हो गई।'],
+            ['Priya S.','Ahmedabad','Pt. Gupta जी की predictions बिल्कुल सही निकली। विवाह का समय बताया और exact वही हुआ। Life-changing experience था।'],
+            ['Rahul P.','Surat','Career में 2 साल से problem थी। Consultation के बाद उपाय किए और 3 months में dream job मिली। 100% genuine!'],
+            ['Meera J.','Vadodara','बेटे की शादी रुकी हुई थी। Kundali मिलान और remedy के बाद 3 months में shaadi ho gayi। Bahut aabhari hoon।'],
           ].map(([name,city,text])=>(
-            <div key={name} className="testimonial">
-              <div className="testimonial-stars">⭐⭐⭐⭐⭐</div>
-              <div className="testimonial-text">"{text}"</div>
-              <div className="testimonial-name">{name}</div>
-              <div className="testimonial-city">{city}</div>
+            <div key={name} className="tcard">
+              <div className="tcard-stars">⭐⭐⭐⭐⭐</div>
+              <div className="tcard-text">"{text}"</div>
+              <div className="tcard-name">{name}</div>
+              <div className="tcard-city">{city}</div>
             </div>
           ))}
         </div>
-      </section>
+      </div>
 
-      <section className="faq">
-        <h2>अक्सर पूछे जाने वाले सवाल</h2>
-        {[
-          ['क्या ₹199 में सब कुछ मिलेगा?','हां — ₹199 में विस्तृत कुंडली रिपोर्ट और व्यक्तिगत परामर्श दोनों शामिल हैं।'],
-          ['कितने समय में रिपोर्ट मिलेगी?','बुकिंग के 24 घंटे के भीतर आपकी रिपोर्ट और परामर्श की व्यवस्था होगी।'],
-          ['Online consultation कैसे होगी?','बुकिंग के बाद आपको WhatsApp/Phone पर Pt. Gupta से जोड़ा जाएगा।'],
-          ['Payment secure है?','हां — Razorpay के माध्यम से 100% secure payment। UPI, Card, NetBanking सब accepted।'],
-        ].map(([q,a])=>(
-          <div key={q} className="faq-item">
-            <div className="faq-q">{q}</div>
-            <div className="faq-a">{a}</div>
-          </div>
-        ))}
-      </section>
-
-      <div className="sticky-cta">
-        <div className="sticky-inner">
-          <Link href="/book" className="sticky-btn">
-            <div>
-              <div className="sticky-left-title">कुंडली बुक करें</div>
-              <div className="sticky-left-sub">सिर्फ ₹199 · Limited Slots</div>
+      <div className="section pb" style={{paddingTop:0}}>
+        <div className="sec-tag">FAQs</div>
+        <div className="sec-h2">Common Questions</div>
+        <div className="faq-list">
+          {[
+            ['₹199 में exactly क्या मिलेगा?','Complete Kundali report (PDF) + personal phone/WhatsApp consultation with Pt. Gupta. कोई hidden charge नहीं।'],
+            ['कितने समय में response मिलेगा?','Booking के 24 घंटे के अंदर Pt. Gupta personally connect करेंगे।'],
+            ['Online consultation कैसे होगी?','Payment के बाद आपको WhatsApp पर contact किया जाएगा। Phone call या video call — जो comfortable हो।'],
+            ['Payment safe है?','हाँ — Razorpay से 100% secure। UPI, Debit/Credit Card, Net Banking — सब accepted।'],
+          ].map(([q,a])=>(
+            <div key={q} className="faq-item">
+              <div className="faq-q">❓ {q}</div>
+              <div className="faq-a">{a}</div>
             </div>
-            <div className="sticky-price">₹199 →</div>
-          </Link>
+          ))}
         </div>
+      </div>
+
+      <div className="cta-banner">
+        <h2>आपके Stars आपका इंतज़ार कर रहे हैं</h2>
+        <p>सिर्फ ₹199 में जानें अपना भविष्य — Limited slots available</p>
+        <Link href="/book" className="btn-white">अभी बुक करें — ₹199 →</Link>
       </div>
 
       <footer className="footer">
         <div className="footer-logo">
-          <div className="footer-icon">ॐ</div>
+          <div className="footer-badge">ॐ</div>
           <span className="footer-name">OMKKAAR Astroworld</span>
         </div>
         <div className="footer-addr">22/FF, Emperor Building, Fatehgunj, Vadodara - 390002</div>
-        <div className="footer-addr" style={{marginTop:'4px'}}>© 2026 Omkkaar Astroworld · All rights reserved</div>
+        <div className="footer-addr">© 2026 Omkkaar Astroworld · All rights reserved</div>
       </footer>
+
+      <div className="sticky">
+        <div>
+          <div className="sticky-txt">Kundali Consultation</div>
+          <div className="sticky-price">₹199 <span style={{fontSize:'13px',color:'#a0856a',textDecoration:'line-through',fontWeight:400}}>₹999</span></div>
+        </div>
+        <Link href="/book" className="sticky-btn">Book Now →</Link>
+      </div>
     </>
   );
 }
