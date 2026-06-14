@@ -9,8 +9,8 @@ import {
   CheckCircle2, XCircle, Clock, RefreshCw, Sparkles, Plus,
   ChevronLeft, ChevronRight
 } from 'lucide-react';
-import { BookingType } from '../../types';
-import { formatPrice, formatDate, formatTime, cn } from '../../lib/utils';
+import { BookingType } from '../../../types';
+import { formatPrice, formatDate, formatTime, cn } from '../../../lib/utils';
 
 interface Stats {
   totalBookings: number;
