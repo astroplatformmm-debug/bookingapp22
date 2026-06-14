@@ -173,13 +173,13 @@ export default function LandingPage() {
         <div className="sec-tag">Real Customer Reviews</div>
         <div className="sec-h2">देखिए क्या कहते हैं हमारे clients</div>
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'16px',marginBottom:'48px'}}>
-          <div style={{borderRadius:'16px',overflow:'hidden',border:'1px solid #f0e8d0',background:'#000'}}>
-            <video controls playsInline preload="metadata" style={{width:'100%',display:'block',maxHeight:'340px'}}>
+          <div style={{borderRadius:'16px',overflow:'hidden',border:'1px solid #f0e8d0',background:'#000',display:'flex',justifyContent:'center'}}>
+            <video controls playsInline preload="metadata" style={{height:'400px',width:'auto',maxWidth:'100%',display:'block'}}>
               <source src="/testimonial1.mp4" type="video/mp4" />
             </video>
           </div>
-          <div style={{borderRadius:'16px',overflow:'hidden',border:'1px solid #f0e8d0',background:'#000'}}>
-            <video controls playsInline preload="metadata" style={{width:'100%',display:'block',maxHeight:'340px'}}>
+          <div style={{borderRadius:'16px',overflow:'hidden',border:'1px solid #f0e8d0',background:'#000',display:'flex',justifyContent:'center'}}>
+            <video controls playsInline preload="metadata" style={{height:'400px',width:'auto',maxWidth:'100%',display:'block'}}>
               <source src="/testimonial2.mp4" type="video/mp4" />
             </video>
           </div>
