@@ -125,7 +125,7 @@ export default function LandingPage() {
           <div className="hero-badge">⭐ 12,000+ Families Consulted</div>
           <h1>Career, Marriage Aur Finance Ka<br /><em>Kundali Vishleshan</em><br />Sirf ₹199 Mein</h1>
           <p className="hero-sub">
-            India के trusted Vedic astrologer <strong>Pt. Mukesh Ravindra Gupta</strong> के साथ। 25+ साल का अनुभव, ISO certified — Personal WhatsApp/Phone call, कोई video call नहीं।
+            India के trusted Vedic astrologer <strong>Pt. Mukesh Ravindra Gupta</strong> के साथ। 25+ साल का अनुभव, ISO certified — Personal WhatsApp/Phone call with Pt. Gupta।
           </p>
           <div className="price-block">
             <span className="p-old">₹999</span>
@@ -173,8 +173,8 @@ export default function LandingPage() {
         <div className="sec-h2">आपको क्या मिलेगा?</div>
         <div className="what-grid">
           {[
-            ['📋','Kundali Analysis','Career, Marriage, Finance aur Grahon ka Detailed Analysis — PDF Report mein'],
-            ['📞','Personal Call','Direct WhatsApp ya Phone call with Pt. Gupta — No video call'],
+            ['📋','Basic Kundali Report','Career, Marriage, Finance aur Remedies ko cover karta detailed kundali analysis'],
+            ['📞','Direct Consultation','Apni Kundali discuss karein aur apne sawaalon ke jawab paayein — WhatsApp ya Phone par'],
             ['⚡','Max 24hr Delivery','Booking ke maximum 24 ghante mein aapko report milegi'],
             ['🔮','Personalized Remedies','Aapki Kundali ke anusar personalized remedies — generic nahi'],
             ['💑','Career & Marriage','Career growth, financial opportunities aur sahi rishte ki samajh'],
