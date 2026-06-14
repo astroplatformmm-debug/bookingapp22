@@ -170,6 +170,21 @@ export default function LandingPage() {
       </div>
 
       <div className="section">
+        <div className="sec-tag">Real Customer Reviews</div>
+        <div className="sec-h2">देखिए क्या कहते हैं हमारे clients</div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'16px',marginBottom:'48px'}}>
+          <div style={{borderRadius:'16px',overflow:'hidden',border:'1px solid #f0e8d0',background:'#000'}}>
+            <video controls playsInline preload="metadata" style={{width:'100%',display:'block',maxHeight:'340px'}}>
+              <source src="/testimonial1.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div style={{borderRadius:'16px',overflow:'hidden',border:'1px solid #f0e8d0',background:'#000'}}>
+            <video controls playsInline preload="metadata" style={{width:'100%',display:'block',maxHeight:'340px'}}>
+              <source src="/testimonial2.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+
         <div className="sec-tag">सिर्फ ₹199 में मिलेगा</div>
         <div className="sec-h2">आपको क्या मिलेगा?</div>
         <div className="what-grid">
@@ -193,24 +208,6 @@ export default function LandingPage() {
       <div className="section" style={{paddingTop:0}}>
         <div className="sec-tag">Real Reviews</div>
         <div className="sec-h2">12,000+ satisfied clients</div>
-
-        {/* Video Testimonials */}
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'16px',marginBottom:'24px'}}>
-          {[
-            {src:'/testimonial1.mp4'},
-            {src:'/testimonial2.mp4'},
-          ].map((v,i) => (
-            <div key={i} style={{borderRadius:'16px',overflow:'hidden',border:'1px solid #f0e8d0',background:'#fff',padding:'4px'}}>
-              <video
-                controls
-                playsInline
-                style={{width:'100%',borderRadius:'12px',display:'block',maxHeight:'320px',objectFit:'cover'}}
-              >
-                <source src={v.src} type="video/mp4" />
-              </video>
-            </div>
-          ))}
-        </div>
 
         <div className="tgrid">
           {[
