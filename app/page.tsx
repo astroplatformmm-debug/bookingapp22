@@ -98,6 +98,7 @@ export default function LandingPage() {
           .section{padding:36px 16px}
           .what-grid{grid-template-columns:1fr 1fr}
           .tgrid{grid-template-columns:1fr}
+          .video-grid{grid-template-columns:1fr!important}
           .nav-phone{display:none}
           .cta-banner{padding:40px 16px}
           .cta-banner h2{font-size:1.5rem}
@@ -192,6 +193,25 @@ export default function LandingPage() {
       <div className="section" style={{paddingTop:0}}>
         <div className="sec-tag">Real Reviews</div>
         <div className="sec-h2">12,000+ satisfied clients</div>
+
+        {/* Video Testimonials */}
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'16px',marginBottom:'24px'}}>
+          {[
+            {src:'/testimonial1.mp4'},
+            {src:'/testimonial2.mp4'},
+          ].map((v,i) => (
+            <div key={i} style={{borderRadius:'16px',overflow:'hidden',border:'1px solid #f0e8d0',background:'#fff',padding:'4px'}}>
+              <video
+                controls
+                playsInline
+                style={{width:'100%',borderRadius:'12px',display:'block',maxHeight:'320px',objectFit:'cover'}}
+              >
+                <source src={v.src} type="video/mp4" />
+              </video>
+            </div>
+          ))}
+        </div>
+
         <div className="tgrid">
           {[
             ['Priya S.','Ahmedabad','Pt. Gupta ji ne meri kundali dekh ke career ke baare mein jo bataya, 6 mahine mein sab sach ho gaya. Bahut shukriya!'],
