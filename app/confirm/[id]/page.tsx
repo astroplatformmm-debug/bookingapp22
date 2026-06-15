@@ -17,7 +17,13 @@ export default function ConfirmPage() {
     if (!id) return;
     fetch(`/api/bookings/${id}`)
       .then(r => { if (!r.ok) throw new Error('Not found'); return r.json(); })
-      .then(data => { if (data.paymentStatus !== 'PAID') { router.push('/book'); return; } setBooking(data); })
+      .then(data => {
+        if (data.paymentStatus !== 'PAID') { router.push('/book'); return; }
+        setBooking(data);
+        if (typeof window !== 'undefined' && (window as any).fbq) {
+          (window as any).fbq('track', 'Lead');
+        }
+      })
       .catch(() => setError('बुकिंग नहीं मिली।'))
       .finally(() => setLoading(false));
   }, [id, router]);
