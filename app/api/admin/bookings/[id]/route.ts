@@ -1,7 +1,8 @@
-// src/app/api/admin/bookings/[id]/route.ts
+// app/api/admin/bookings/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '../../../../../lib/prisma';
 import { getAdminFromRequest } from '../../../../../lib/auth';
+import { Prisma } from '@prisma/client';
 
 export async function PATCH(
   req: NextRequest,
@@ -17,7 +18,7 @@ export async function PATCH(
     return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
   }
 
-  const booking = await prisma.$transaction(async (tx) => {
+  const booking = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     const updated = await tx.booking.update({
       where: { id: params.id },
       data: { status },
