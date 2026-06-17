@@ -5,7 +5,6 @@ import { addDays, startOfDay } from 'date-fns';
 
 export const dynamic = 'force-dynamic';
 
-// FIX: Use local date string to avoid UTC timezone shift for IST users
 function toLocalDateString(d: Date): string {
   const yyyy = d.getFullYear();
   const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -30,17 +29,16 @@ export async function GET(req: NextRequest) {
       where: {
         serviceId,
         isBooked: false,
+        isActive: true,   // only show active slots to public
         date: dateStr
           ? { equals: new Date(dateStr) }
-          : { gte: addDays(today, 0), lte: maxDate },
+          : { gte: today, lte: maxDate },
       },
       orderBy: [{ date: 'asc' }, { startTime: 'asc' }],
     });
 
     const grouped: Record<string, typeof slots> = {};
     for (const slot of slots) {
-      // FIX: toISOString() returns UTC which shifts date back 5:30hrs for IST
-      // Use local date components instead
       const key = toLocalDateString(slot.date);
       if (!grouped[key]) grouped[key] = [];
       grouped[key].push(slot);
