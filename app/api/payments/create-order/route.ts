@@ -1,7 +1,8 @@
-// src/app/api/payments/create-order/route.ts
+// app/api/payments/create-order/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '../../../../lib/prisma';
 import { getRazorpayInstance } from '../../../../lib/razorpay';
+import { Prisma } from '@prisma/client';
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,18 +13,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Validate email
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
       return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
     }
 
-    // Validate phone
     if (!/^[6-9]\d{9}$/.test(customerPhone.replace(/\D/g, '').slice(-10))) {
       return NextResponse.json({ error: 'Invalid phone number' }, { status: 400 });
     }
 
-    // Check slot availability — with a DB-level lock via transaction
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const slot = await tx.slot.findUnique({
         where: { id: slotId },
         include: { service: true },
@@ -36,7 +34,6 @@ export async function POST(req: NextRequest) {
       const service = await tx.service.findUnique({ where: { id: serviceId } });
       if (!service || !service.active) throw new Error('Service not available');
 
-      // Create Razorpay order
       const razorpay = getRazorpayInstance();
       const order = await razorpay.orders.create({
         amount: service.price,
@@ -50,7 +47,6 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      // Create a PENDING booking
       const booking = await tx.booking.create({
         data: {
           slotId,
