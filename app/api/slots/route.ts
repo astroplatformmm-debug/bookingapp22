@@ -5,6 +5,14 @@ import { addDays, startOfDay } from 'date-fns';
 
 export const dynamic = 'force-dynamic';
 
+// FIX: Use local date string to avoid UTC timezone shift for IST users
+function toLocalDateString(d: Date): string {
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const serviceId = searchParams.get('serviceId');
@@ -31,7 +39,9 @@ export async function GET(req: NextRequest) {
 
     const grouped: Record<string, typeof slots> = {};
     for (const slot of slots) {
-      const key = slot.date.toISOString().split('T')[0];
+      // FIX: toISOString() returns UTC which shifts date back 5:30hrs for IST
+      // Use local date components instead
+      const key = toLocalDateString(slot.date);
       if (!grouped[key]) grouped[key] = [];
       grouped[key].push(slot);
     }
