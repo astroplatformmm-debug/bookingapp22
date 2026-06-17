@@ -1,6 +1,6 @@
 // app/api/slots/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '../../lib/prisma';
+import { prisma } from '../../../lib/prisma';
 import { addDays, startOfDay } from 'date-fns';
 
 export const dynamic = 'force-dynamic';
