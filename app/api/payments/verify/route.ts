@@ -1,9 +1,10 @@
-// src/app/api/payments/verify/route.ts
+// app/api/payments/verify/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '../../../../lib/prisma';
 import { verifyRazorpaySignature } from '../../../../lib/razorpay';
 import { sendBookingConfirmationEmail } from '../../../../lib/email';
 import { format } from 'date-fns';
+import { Prisma } from '@prisma/client';
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,7 +15,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing payment fields' }, { status: 400 });
     }
 
-    // Verify the signature
     const isValid = verifyRazorpaySignature(
       razorpay_order_id,
       razorpay_payment_id,
@@ -25,8 +25,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Payment verification failed' }, { status: 400 });
     }
 
-    // Update booking and slot atomically
-    const booking = await prisma.$transaction(async (tx) => {
+    const booking = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const existingBooking = await tx.booking.findUnique({
         where: { id: bookingId },
         include: { slot: true, service: true },
@@ -34,18 +33,17 @@ export async function POST(req: NextRequest) {
 
       if (!existingBooking) throw new Error('Booking not found');
       if (existingBooking.orderId !== razorpay_order_id) throw new Error('Order mismatch');
+
+      // Idempotent — already confirmed
       if (existingBooking.paymentStatus === 'PAID') {
-        // Idempotent — already confirmed
         return existingBooking;
       }
 
-      // Mark slot as booked
       await tx.slot.update({
         where: { id: existingBooking.slotId },
         data: { isBooked: true },
       });
 
-      // Confirm booking
       const updated = await tx.booking.update({
         where: { id: bookingId },
         data: {
@@ -59,7 +57,7 @@ export async function POST(req: NextRequest) {
       return updated;
     });
 
-    // Send confirmation emails (non-blocking)
+    // Send confirmation email (non-blocking)
     try {
       await sendBookingConfirmationEmail({
         customerName: booking.customerName,
