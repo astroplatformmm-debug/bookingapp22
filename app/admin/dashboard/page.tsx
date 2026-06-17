@@ -238,6 +238,14 @@ export default function AdminDashboard() {
   );
 }
 
+// ─── HELPER: Local date string (no UTC shift) ───────────────────────────────
+function toLocalDateString(d: Date): string {
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
 function SlotManager() {
   const [services, setServices] = useState<{ id: string; name: string }[]>([]);
   const [serviceId, setServiceId] = useState('');
@@ -283,14 +291,18 @@ function SlotManager() {
     return slots;
   };
 
+  // FIX: Use local date string instead of toISOString() which shifts to UTC
   const getDates = () => {
     const dates: string[] = [];
     if (!startDate || !endDate) return dates;
-    const start = new Date(startDate + 'T00:00:00');
-    const end = new Date(endDate + 'T00:00:00');
+    // Parse as local midnight, not UTC
+    const [sy, sm, sd] = startDate.split('-').map(Number);
+    const [ey, em, ed] = endDate.split('-').map(Number);
+    const start = new Date(sy, sm - 1, sd);
+    const end = new Date(ey, em - 1, ed);
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
       if (!offDays.includes(d.getDay())) {
-        dates.push(d.toISOString().split('T')[0]);
+        dates.push(toLocalDateString(d));
       }
     }
     return dates;
@@ -304,29 +316,68 @@ function SlotManager() {
   };
 
   const handleCreate = async () => {
-    if (!serviceId || !startDate || !endDate) { toast.error('Service aur dates select karo'); return; }
+    if (!serviceId) { toast.error('Service select karo'); return; }
+    if (!startDate || !endDate) { toast.error('Dates select karo'); return; }
+
     const slots = generateSlots();
     const dates = getDates();
+
     if (slots.length === 0) { toast.error('No slots — check time settings'); return; }
-    if (dates.length === 0) { toast.error('No valid dates'); return; }
+    if (dates.length === 0) { toast.error('No valid dates — check off days'); return; }
 
     setLoading(true);
-    let total = 0;
+    let totalCreated = 0;
+    let failedDates = 0;
+
     for (const date of dates) {
-      const res = await fetch('/api/admin/slots', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ serviceId, date, slots }),
-      });
-      if (res.ok) { const d = await res.json(); total += d.created; }
+      try {
+        const res = await fetch('/api/admin/slots', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            serviceId,
+            date,
+            slots: slots.map(s => ({ startTime: s.start, endTime: s.end })),
+          }),
+        });
+
+        if (res.ok) {
+          const d = await res.json();
+          totalCreated += d.created;
+        } else {
+          const err = await res.json();
+          console.error(`Slot creation failed for date ${date}:`, err);
+          failedDates++;
+          // If unauthorized, stop immediately and redirect
+          if (res.status === 401) {
+            toast.error('Session expire ho gayi — dobara login karo');
+            setLoading(false);
+            return;
+          }
+        }
+      } catch (err) {
+        console.error(`Network error for date ${date}:`, err);
+        failedDates++;
+      }
     }
-    toast.success(`✅ ${total} slots created across ${dates.length} days!`);
+
     setLoading(false);
     setPreview([]);
+
+    if (failedDates > 0 && totalCreated === 0) {
+      toast.error(`❌ Koi bhi slot create nahi hua. Console check karo.`);
+    } else if (failedDates > 0) {
+      toast.success(`⚠️ ${totalCreated} slots created, ${failedDates} dates failed`);
+    } else {
+      toast.success(`✅ ${totalCreated} slots created across ${dates.length} days!`);
+    }
   };
 
   const inputStyle = {width:'100%',padding:'10px 12px',borderRadius:'8px',border:'1px solid #e5e7eb',fontSize:'13px',outline:'none',background:'#fff'};
   const labelStyle = {display:'block' as const,fontSize:'11px',fontWeight:700 as const,textTransform:'uppercase' as const,letterSpacing:'0.05em',color:'#6b7280',marginBottom:'6px'};
+
+  // FIX: Today's date in local time for min attribute
+  const todayLocal = toLocalDateString(new Date());
 
   return (
     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'20px',alignItems:'start'}}>
@@ -344,11 +395,11 @@ function SlotManager() {
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px',marginBottom:'14px'}}>
           <div>
             <label style={labelStyle}>From Date</label>
-            <input type="date" style={inputStyle} min={new Date().toISOString().split('T')[0]} value={startDate} onChange={e => setStartDate(e.target.value)} />
+            <input type="date" style={inputStyle} min={todayLocal} value={startDate} onChange={e => setStartDate(e.target.value)} />
           </div>
           <div>
             <label style={labelStyle}>To Date</label>
-            <input type="date" style={inputStyle} min={startDate||new Date().toISOString().split('T')[0]} value={endDate} onChange={e => setEndDate(e.target.value)} />
+            <input type="date" style={inputStyle} min={startDate || todayLocal} value={endDate} onChange={e => setEndDate(e.target.value)} />
           </div>
         </div>
 
