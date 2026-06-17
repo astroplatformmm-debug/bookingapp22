@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import {
   Calendar, Users, IndianRupee, TrendingUp, LogOut, Search,
   CheckCircle2, XCircle, Clock, RefreshCw, Sparkles, Plus,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight, Trash2, AlertTriangle
 } from 'lucide-react';
 import { BookingType } from '../../../types';
 import { formatPrice, formatDate, formatTime, cn } from '../../../lib/utils';
@@ -93,7 +93,6 @@ export default function AdminDashboard() {
 
       <div style={{maxWidth:'1200px',margin:'0 auto',padding:'24px'}}>
 
-        {/* Stats */}
         {stats && (
           <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'16px',marginBottom:'24px'}}>
             {[
@@ -111,7 +110,6 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* Tabs */}
         <div style={{display:'flex',gap:'8px',marginBottom:'20px'}}>
           {[['bookings',`Bookings (${total})`],['slots','Manage Slots']].map(([tab,label]) => (
             <button key={tab} onClick={() => setActiveTab(tab as 'bookings'|'slots')}
@@ -126,7 +124,6 @@ export default function AdminDashboard() {
           ))}
         </div>
 
-        {/* Bookings Tab */}
         {activeTab === 'bookings' && (
           <>
             <div style={{display:'flex',gap:'10px',marginBottom:'16px',flexWrap:'wrap'}}>
@@ -238,7 +235,7 @@ export default function AdminDashboard() {
   );
 }
 
-// ─── HELPER: Local date string (no UTC shift) ───────────────────────────────
+// ─── HELPER ─────────────────────────────────────────────────────────────────
 function toLocalDateString(d: Date): string {
   const yyyy = d.getFullYear();
   const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -253,10 +250,11 @@ function SlotManager() {
   const [endDate, setEndDate] = useState('');
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('18:00');
-  const [duration, setDuration] = useState(15);
+  const [duration, setDuration] = useState(60);
   const [breakTime, setBreakTime] = useState(0);
   const [offDays, setOffDays] = useState<number[]>([0]);
   const [loading, setLoading] = useState(false);
+  const [clearing, setClearing] = useState(false);
   const [preview, setPreview] = useState<{start:string,end:string}[]>([]);
 
   useEffect(() => {
@@ -291,11 +289,9 @@ function SlotManager() {
     return slots;
   };
 
-  // FIX: Use local date string instead of toISOString() which shifts to UTC
   const getDates = () => {
     const dates: string[] = [];
     if (!startDate || !endDate) return dates;
-    // Parse as local midnight, not UTC
     const [sy, sm, sd] = startDate.split('-').map(Number);
     const [ey, em, ed] = endDate.split('-').map(Number);
     const start = new Date(sy, sm - 1, sd);
@@ -315,13 +311,93 @@ function SlotManager() {
     else toast.success(`${slots.length} slots per day`);
   };
 
+  // Deletes all unbooked slots for this service+date range, then creates fresh ones
+  const handleClearAndRecreate = async () => {
+    if (!serviceId) { toast.error('Service select karo'); return; }
+    if (!startDate || !endDate) { toast.error('Dates select karo'); return; }
+
+    const slots = generateSlots();
+    const dates = getDates();
+    if (slots.length === 0) { toast.error('No slots — check time settings'); return; }
+    if (dates.length === 0) { toast.error('No valid dates — check off days'); return; }
+
+    const confirmed = window.confirm(
+      `⚠️ Yeh is date range ke SAARE unbooked slots delete kar dega aur naye ${slots.length} slots/day se recreate karega.\n\nBooked slots safe rahenge.\n\nProceed?`
+    );
+    if (!confirmed) return;
+
+    setClearing(true);
+
+    // Step 1: Bulk delete unbooked slots in range
+    try {
+      const delRes = await fetch('/api/admin/slots', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ serviceId, startDate, endDate }),
+      });
+      if (!delRes.ok) {
+        const err = await delRes.json();
+        toast.error(`Delete failed: ${err.error}`);
+        setClearing(false);
+        return;
+      }
+      const { deleted } = await delRes.json();
+      toast.success(`🗑️ ${deleted} purane slots delete hue`);
+    } catch {
+      toast.error('Delete mein network error');
+      setClearing(false);
+      return;
+    }
+
+    // Step 2: Create fresh slots
+    let totalCreated = 0;
+    let failedDates = 0;
+
+    for (const date of dates) {
+      try {
+        const res = await fetch('/api/admin/slots', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            serviceId,
+            date,
+            slots: slots.map(s => ({ startTime: s.start, endTime: s.end })),
+          }),
+        });
+        if (res.ok) {
+          const d = await res.json();
+          totalCreated += d.created;
+        } else {
+          if (res.status === 401) {
+            toast.error('Session expire — dobara login karo');
+            setClearing(false);
+            return;
+          }
+          failedDates++;
+        }
+      } catch {
+        failedDates++;
+      }
+    }
+
+    setClearing(false);
+    setPreview([]);
+
+    if (failedDates > 0 && totalCreated === 0) {
+      toast.error('❌ Koi slot create nahi hua. Console check karo.');
+    } else if (failedDates > 0) {
+      toast.success(`⚠️ ${totalCreated} slots created, ${failedDates} dates failed`);
+    } else {
+      toast.success(`✅ ${totalCreated} fresh slots created across ${dates.length} days!`);
+    }
+  };
+
   const handleCreate = async () => {
     if (!serviceId) { toast.error('Service select karo'); return; }
     if (!startDate || !endDate) { toast.error('Dates select karo'); return; }
 
     const slots = generateSlots();
     const dates = getDates();
-
     if (slots.length === 0) { toast.error('No slots — check time settings'); return; }
     if (dates.length === 0) { toast.error('No valid dates — check off days'); return; }
 
@@ -340,23 +416,18 @@ function SlotManager() {
             slots: slots.map(s => ({ startTime: s.start, endTime: s.end })),
           }),
         });
-
         if (res.ok) {
           const d = await res.json();
           totalCreated += d.created;
         } else {
-          const err = await res.json();
-          console.error(`Slot creation failed for date ${date}:`, err);
-          failedDates++;
-          // If unauthorized, stop immediately and redirect
           if (res.status === 401) {
-            toast.error('Session expire ho gayi — dobara login karo');
+            toast.error('Session expire — dobara login karo');
             setLoading(false);
             return;
           }
+          failedDates++;
         }
-      } catch (err) {
-        console.error(`Network error for date ${date}:`, err);
+      } catch {
         failedDates++;
       }
     }
@@ -365,7 +436,7 @@ function SlotManager() {
     setPreview([]);
 
     if (failedDates > 0 && totalCreated === 0) {
-      toast.error(`❌ Koi bhi slot create nahi hua. Console check karo.`);
+      toast.error('❌ Koi slot create nahi hua. Console check karo.');
     } else if (failedDates > 0) {
       toast.success(`⚠️ ${totalCreated} slots created, ${failedDates} dates failed`);
     } else {
@@ -375,14 +446,15 @@ function SlotManager() {
 
   const inputStyle = {width:'100%',padding:'10px 12px',borderRadius:'8px',border:'1px solid #e5e7eb',fontSize:'13px',outline:'none',background:'#fff'};
   const labelStyle = {display:'block' as const,fontSize:'11px',fontWeight:700 as const,textTransform:'uppercase' as const,letterSpacing:'0.05em',color:'#6b7280',marginBottom:'6px'};
-
-  // FIX: Today's date in local time for min attribute
   const todayLocal = toLocalDateString(new Date());
 
   return (
     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'20px',alignItems:'start'}}>
       <div style={{background:'#fff',borderRadius:'16px',border:'1px solid #e5e7eb',padding:'24px'}}>
-        <h3 style={{fontFamily:'Georgia,serif',fontSize:'18px',marginBottom:'20px',color:'#111'}}>Slot Settings</h3>
+        <h3 style={{fontFamily:'Georgia,serif',fontSize:'18px',marginBottom:'4px',color:'#111'}}>Slot Settings</h3>
+        <p style={{fontSize:'12px',color:'#9ca3af',marginBottom:'20px'}}>
+          Pehli baar create karo ya <strong>Clear &amp; Recreate</strong> se existing ko replace karo
+        </p>
 
         <div style={{marginBottom:'14px'}}>
           <label style={labelStyle}>Service</label>
@@ -445,22 +517,47 @@ function SlotManager() {
           <p style={{fontSize:'11px',color:'#9ca3af',marginTop:'6px'}}>Red = off · Green = working</p>
         </div>
 
-        <div style={{display:'flex',gap:'10px'}}>
-          <button onClick={handlePreview}
-            style={{flex:1,padding:'12px',borderRadius:'10px',border:'2px solid #2f4694',color:'#2f4694',fontWeight:700,fontSize:'13px',cursor:'pointer',background:'#fff'}}>
-            Preview
+        {/* Preview button */}
+        <button onClick={handlePreview}
+          style={{width:'100%',padding:'11px',borderRadius:'10px',border:'2px solid #2f4694',color:'#2f4694',fontWeight:700,fontSize:'13px',cursor:'pointer',background:'#fff',marginBottom:'10px'}}>
+          Preview Slots
+        </button>
+
+        {/* Warning banner */}
+        <div style={{background:'#fff7ed',border:'1px solid #fed7aa',borderRadius:'10px',padding:'12px',marginBottom:'10px',display:'flex',gap:'8px',alignItems:'flex-start'}}>
+          <AlertTriangle style={{width:'15px',height:'15px',color:'#ea580c',flexShrink:0,marginTop:'1px'}} />
+          <p style={{fontSize:'12px',color:'#9a3412',margin:0,lineHeight:'1.5'}}>
+            <strong>Clear &amp; Recreate</strong> — Is date range ke saare unbooked slots delete hokar naye banenge. Already booked slots safe rahenge.
+          </p>
+        </div>
+
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px'}}>
+          {/* Clear & Recreate — destructive action */}
+          <button onClick={handleClearAndRecreate} disabled={clearing || loading}
+            style={{padding:'12px',borderRadius:'10px',border:'2px solid #dc2626',color:'#dc2626',fontWeight:700,fontSize:'12px',cursor:'pointer',background:'#fff',
+              opacity:(clearing||loading)?0.6:1,display:'flex',alignItems:'center',justifyContent:'center',gap:'6px'}}>
+            <Trash2 style={{width:'13px',height:'13px'}} />
+            {clearing ? 'Clearing...' : 'Clear & Recreate'}
           </button>
-          <button onClick={handleCreate} disabled={loading}
-            style={{flex:1,padding:'12px',borderRadius:'10px',border:'none',background:'#2f4694',color:'#fff',fontWeight:700,fontSize:'13px',cursor:'pointer',opacity:loading?0.6:1}}>
-            {loading ? 'Creating...' : 'Create Slots'}
+
+          {/* Create — additive, no deletion */}
+          <button onClick={handleCreate} disabled={loading || clearing}
+            style={{padding:'12px',borderRadius:'10px',border:'none',background:'#2f4694',color:'#fff',fontWeight:700,fontSize:'13px',cursor:'pointer',
+              opacity:(loading||clearing)?0.6:1}}>
+            {loading ? 'Creating...' : 'Add Slots'}
           </button>
         </div>
+
+        <p style={{fontSize:'11px',color:'#9ca3af',marginTop:'8px',textAlign:'center'}}>
+          <strong>Add Slots</strong> = existing ke saath naye add karo &nbsp;·&nbsp; <strong>Clear &amp; Recreate</strong> = pehle saaf karo phir banao
+        </p>
       </div>
 
+      {/* Preview panel */}
       <div style={{background:'#fff',borderRadius:'16px',border:'1px solid #e5e7eb',padding:'24px'}}>
         <h3 style={{fontFamily:'Georgia,serif',fontSize:'18px',marginBottom:'6px',color:'#111'}}>Preview</h3>
         <p style={{fontSize:'12px',color:'#6b7280',marginBottom:'16px'}}>
-          {preview.length > 0 ? `${preview.length} slots per day` : 'Click Preview to see slots'}
+          {preview.length > 0 ? `${preview.length} slots per day · ${duration} min each` : 'Click "Preview Slots" to see'}
         </p>
 
         {preview.length > 0 ? (
@@ -488,7 +585,7 @@ function SlotManager() {
         ) : (
           <div style={{textAlign:'center',padding:'48px 0',color:'#9ca3af'}}>
             <Calendar style={{width:'36px',height:'36px',margin:'0 auto 10px',display:'block',opacity:0.3}} />
-            <div style={{fontSize:'13px'}}>Set settings → Preview → Create</div>
+            <div style={{fontSize:'13px'}}>Settings set karo → Preview → Create ya Clear &amp; Recreate</div>
           </div>
         )}
       </div>
